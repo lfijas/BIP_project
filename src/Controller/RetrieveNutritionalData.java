@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Model.Product;
+
 public class RetrieveNutritionalData extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -31,10 +33,11 @@ public class RetrieveNutritionalData extends HttpServlet {
 		response.setCharacterEncoding( "UTF-8" );
 		
 		String barcode = request.getParameter("barcode");
+		Product product = Product.GetProductByBarcode(barcode);
 		
 		
 		try {
-			request.setAttribute("data", barcode);
+			request.setAttribute("data", product);
 			getServletConfig().getServletContext()
 					.getRequestDispatcher("/index.jsp")
 					.forward(request, response);

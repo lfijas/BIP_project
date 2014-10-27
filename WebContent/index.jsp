@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
+<%@ page import="Model.Product" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,7 +13,9 @@
 		<input type="submit" value="Submit">
 	</form>
 	
-	<div><% if (request.getAttribute("data") != null) 
-		out.print(request.getAttribute("data")); %></div>
+	<div><% if (request.getAttribute("data") != null) {
+			Product product = (Product)request.getAttribute("data");
+			out.print(product.getName());
+		} %></div>
 </body>
 </html>
