@@ -1,6 +1,11 @@
 use BIP_project
 go
 
+/*drop table Products
+drop table Food_groups
+drop table Brands
+go*/
+
 create table Brands
 	(
 	id int primary key not null,
@@ -18,14 +23,24 @@ create table Food_groups
 	
 
 create table Products
-	(GTIN_13 bigint primary key not null,
-	name varchar(50) not null,
-	size varchar(20) not null,
-	serving_size varchar(20),
-	carbohydrates varchar(15), 
-	sugar varchar(15),
-	fat varchar(15),
-	calories varchar(15),
+	(barcode bigint primary key not null,
+	name varchar(100) not null,
+	size int,
+	unit_size varchar(10),
+	serving int,
+	carbohydrates float,
+	proteins float, 
+	sugar float,
+	fat float,
+	saturated_fat float,
+	cholesterol float,
+	fiber float,
+	sodium float,
+	calcium float,
+	iron float,
+	vitamin_a float,
+	vitamin_c float,
+	calories float,
 	barnd_id int foreign key references Brands(id) ,
 	food_group_id int foreign key references Food_groups(id)
 	)
