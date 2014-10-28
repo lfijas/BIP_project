@@ -26,7 +26,7 @@ public class DBConnector {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			conn = DriverManager.getConnection("jdbc:sqlserver://" + host + ":" + port + ";user=" + username + ";password=" + password + ";database=" + database);
-			System.out.println("test");
+			System.out.println("DB connect success");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

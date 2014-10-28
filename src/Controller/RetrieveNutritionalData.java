@@ -30,11 +30,10 @@ public class RetrieveNutritionalData extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
-		response.setCharacterEncoding( "UTF-8" );
+		//response.setCharacterEncoding( "UTF-8" );
 		
 		String barcode = request.getParameter("barcode");
-		Product product = Product.GetProductByBarcode(barcode);
-		
+		Product product = getProductInfo(barcode);
 		
 		try {
 			request.setAttribute("data", product);
@@ -47,5 +46,17 @@ public class RetrieveNutritionalData extends HttpServlet {
 			e.printStackTrace();
 		}
 
+	}
+	
+	protected Product getProductInfo(String barcode) {
+		Product product = null;
+		if (isNumeric(barcode)) {
+			product = Product.GetProductByBarcode(barcode);
+		}
+		return product;
+	}
+	
+	private static boolean isNumeric(String str) {
+	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 }

@@ -11,22 +11,22 @@ import Model.DBConnector;
 public class Product {
 	private String code;
 	private String name;	
-	private int size;
+	private double size;
 	private String unitSize;
 	private String brand;
-	private int	calories;
-	private int	proteins;
-	private int	carbohydrates;
-	private int	sugar;
-	private int	fat;
-	private int	saturatedFat;
-	private int	cholesterol;	
-	private int	fiber;
-	private int	sodium;
-	private int	vitaminA;
-	private int	vitaminC;
-	private int	calcium;	
-	private int	iron;
+	private double	calories;
+	private double	proteins;
+	private double	carbohydrates;
+	private double	sugar;
+	private double	fat;
+	private double	saturatedFat;
+	private double	cholesterol;	
+	private double	fiber;
+	private double	sodium;
+	private double	vitaminA;
+	private double	vitaminC;
+	private double	calcium;	
+	private double	iron;
 	
 	public String getCode() {
 		return code;
@@ -40,7 +40,7 @@ public class Product {
 
 
 
-	public int getSize() {
+	public double getSize() {
 		return size;
 	}
 
@@ -58,79 +58,79 @@ public class Product {
 
 
 
-	public int getCalories() {
+	public double getCalories() {
 		return calories;
 	}
 
 
 
-	public int getProteins() {
+	public double getProteins() {
 		return proteins;
 	}
 
 
 
-	public int getCarbohydrates() {
+	public double getCarbohydrates() {
 		return carbohydrates;
 	}
 
 
 
-	public int getSugar() {
+	public double getSugar() {
 		return sugar;
 	}
 
 
 
-	public int getFat() {
+	public double getFat() {
 		return fat;
 	}
 
 
 
-	public int getSaturatedFat() {
+	public double getSaturatedFat() {
 		return saturatedFat;
 	}
 
 
 
-	public int getCholesterol() {
+	public double getCholesterol() {
 		return cholesterol;
 	}
 
 
 
-	public int getFiber() {
+	public double getFiber() {
 		return fiber;
 	}
 
 
 
-	public int getSodium() {
+	public double getSodium() {
 		return sodium;
 	}
 
 
 
-	public int getVitaminA() {
+	public double getVitaminA() {
 		return vitaminA;
 	}
 
 
 
-	public int getVitaminC() {
+	public double getVitaminC() {
 		return vitaminC;
 	}
 
 
 
-	public int getCalcium() {
+	public double getCalcium() {
 		return calcium;
 	}
 
 
 
-	public int getIron() {
+	public double getIron() {
 		return iron;
 	}																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		
 
@@ -138,7 +138,7 @@ public class Product {
 	
 	public static Product GetProductByBarcode(String barcode)
 	{
-		Product product = new Product();
+		Product product = null;
 		
 		try {
 			
@@ -146,26 +146,26 @@ public class Product {
 			
 			ResultSet result = DBConnector.query("SELECT * from Products WHERE barcode = '" + barcode + "'");
 			
-			if (result != null)
+			if (result != null && result.next())
 			{
-				result.next();
+				product = new Product();
 				product.code = result.getString("barcode");
 				product.name = result.getString("name");
-				product.size = result.getInt("size");
-				product.unitSize = result.getString("unit_size");
-				product.calories = result.getInt("calories");
-				product.proteins = result.getInt("proteins");
-				product.carbohydrates = result.getInt("carbohydrates");
-				product.sugar = result.getInt("sugar");
-				product.fat = result.getInt("fat");
-				product.saturatedFat = result.getInt("saturated_fat");
-				product.cholesterol = result.getInt("cholesterol");
-				product.fiber = result.getInt("fiber");
-				product.sodium = result.getInt("sodium");
-				product.vitaminA = result.getInt("vitamin_a");
-				product.vitaminC = result.getInt("vitamin_c");
-				product.calcium = result.getInt("calcium");
-				product.iron = result.getInt("iron");
+				//product.size = result.getDouble("size");
+				//product.unitSize = result.getString("unit_size");
+				product.calories = result.getDouble("calories");
+				product.proteins = result.getDouble("proteins");
+				product.carbohydrates = result.getDouble("carbohydrates");
+				product.sugar = result.getDouble("sugar");
+				product.fat = result.getDouble("fat");
+				product.saturatedFat = result.getDouble("saturated_fat");
+				product.cholesterol = result.getDouble("cholesterol");
+				product.fiber = result.getDouble("fiber");
+				product.sodium = result.getDouble("sodium");
+				product.vitaminA = result.getDouble("vitamin_a");
+				product.vitaminC = result.getDouble("vitamin_c");
+				product.calcium = result.getDouble("calcium");
+				product.iron = result.getDouble("iron");
 				
 			}
 			
