@@ -1,9 +1,8 @@
 package Model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import Model.DBConnector;
 
@@ -144,28 +143,29 @@ public class Product {
 			
 			DBConnector.connect();
 			
-			ResultSet result = DBConnector.query("SELECT * from Products WHERE barcode = '" + barcode + "'");
+			ResultSet result = DBConnector.query("SELECT * from Product p, Brand b WHERE p.brand_id = b.id and barcode = '" + barcode + "'");
 			
 			if (result != null && result.next())
 			{
 				product = new Product();
 				product.code = result.getString("barcode");
-				product.name = result.getString("name");
-				//product.size = result.getDouble("size");
-				//product.unitSize = result.getString("unit_size");
-				product.calories = result.getDouble("calories");
-				product.proteins = result.getDouble("proteins");
-				product.carbohydrates = result.getDouble("carbohydrates");
-				product.sugar = result.getDouble("sugar");
-				product.fat = result.getDouble("fat");
-				product.saturatedFat = result.getDouble("saturated_fat");
-				product.cholesterol = result.getDouble("cholesterol");
-				product.fiber = result.getDouble("fiber");
-				product.sodium = result.getDouble("sodium");
-				product.vitaminA = result.getDouble("vitamin_a");
-				product.vitaminC = result.getDouble("vitamin_c");
-				product.calcium = result.getDouble("calcium");
-				product.iron = result.getDouble("iron");
+				product.name = (String) isNull(result, "product_name", "string");
+				product.brand = (String) isNull(result, "brand_name", "string");
+				//product.size = result.getDouble("quantity");
+				product.unitSize = (String) isNull(result, "quantity", "string");
+				product.calories = (double) isNull(result, "calories", "double");
+				product.proteins = (double) isNull(result, "proteins_100", "double");
+				product.carbohydrates = (double) isNull(result, "carbohydrates_100", "double");
+				product.sugar = (double) isNull(result, "sugar_100", "double");
+				product.fat = (double) isNull(result, "fat_100", "double");
+				product.saturatedFat = (double) isNull(result, "saturated_fat_100", "double");
+				product.cholesterol = (double) isNull(result, "cholesterol_100", "double");
+				product.fiber = (double) isNull(result, "fiber_100", "double");
+				product.sodium = (double) isNull(result, "sodium_100", "double");
+				product.vitaminA = (double) isNull(result, "vitamin_a", "double");
+				product.vitaminC = (double) isNull(result, "vitamin_c", "double");
+				product.calcium = (double) isNull(result, "calcium_100", "double");
+				product.iron = (double) isNull(result, "iron_100", "double");
 				
 			}
 			
@@ -175,6 +175,30 @@ public class Product {
 			e.printStackTrace();
 		}
 		return product;
+	}
+	
+	private static Object isNull(ResultSet result, String field, String type) {
+		try {
+			if (result.getObject(field) != null) {
+				if (type == "double") {
+					return roundTo2Decimals(result.getDouble(field));
+				} else {
+					return result.getString(field);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (type == "double") {
+			return -1.0;
+		} else {
+			return "-";
+		}
+	}
+	
+	private static double roundTo2Decimals(double val) {
+        DecimalFormat df2 = new DecimalFormat("###.##");
+        return Double.valueOf(df2.format(val));
 	}
 
 }
