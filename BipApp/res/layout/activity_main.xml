@@ -13,6 +13,7 @@
 	        android:layout_weight="1"
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
+	        android:maxLines="1"
 	        android:hint="@string/search_hint" />
 	    <Button
 	        android:id="@+id/search_button"
@@ -21,9 +22,16 @@
 	        android:text="@string/search_button"
 	       	/>
 	</LinearLayout>
+	<TextView 
+	    android:id="@+id/info_text"
+	    android:visibility="gone"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"/>
     <ListView 
         android:id="@+id/search_result_list_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent" 
+        android:layout_marginTop="5dp" >
     </ListView>
 </LinearLayout>

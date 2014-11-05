@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,24 +20,45 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	private ListView searchResults;
 	private ArrayAdapter arrayAdapter;
+	private TextView infoTextView;
+	private Button searchButton;
+	private EditText searchText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		final Button searchButton = (Button) findViewById(R.id.search_button);
-		final EditText searchText = (EditText) findViewById(R.id.search_text);
+		searchButton = (Button) findViewById(R.id.search_button);
+		searchText = (EditText) findViewById(R.id.search_text);
+		infoTextView = (TextView) findViewById(R.id.info_text);
 		searchButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				new DbConnection(MainActivity.this).execute((String)searchText.getText().toString());
+				ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+				if (networkInfo != null && networkInfo.isConnected()) {
+					String query = searchText.getText().toString();
+					if (!query.equals("\n") && !query.equals("")) {
+						searchButton.setEnabled(false);
+						new DbConnection(MainActivity.this).execute(query);
+					}
+					else {
+						infoTextView.setVisibility(View.VISIBLE);
+						infoTextView.setText(R.string.empty_search);
+					}
+				}
+				else {
+					Toast.makeText(MainActivity.this,R.string.no_network, Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		
@@ -58,14 +81,23 @@ public class MainActivity extends Activity {
 		
 		@Override
 		protected ArrayList<String> doInBackground(String... params) {
+			publishProgress();
 			return connectToDatabase(params[0]);
 		}
 		
 		@Override
+		protected void onProgressUpdate(Void... params) {
+			infoTextView.setVisibility(View.VISIBLE);
+			infoTextView.setText(R.string.progress_info);
+		}
+		
+		@Override
 		protected void onPostExecute(ArrayList<String> result) {
+			//TextView infoTextView = (TextView) findViewById(R.id.info_text);
+			infoTextView.setVisibility(View.GONE);
+			searchButton.setEnabled(true);
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			
-			String[] testArray = {"one", "two"};
 			arrayAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, result);
 			searchResults.setAdapter(arrayAdapter);
 		}
@@ -90,7 +122,7 @@ public class MainActivity extends Activity {
 		        resultArrayList = new ArrayList<String>();
 				try {
 					while (resultSet != null && resultSet.next()) {
-						resultArrayList.add(resultSet.getString("product_name"));
+						resultArrayList.add(resultSet.getString("product_name").replaceAll("&quot;", "\""));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

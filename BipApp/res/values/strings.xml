@@ -6,4 +6,7 @@
     <string name="hello_world">Hello world!</string>
 	<string name="search_hint">Enter product name</string>
 	<string name="search_button">Search</string>
+	<string name="no_network">No network connection. Network connection is required!</string>
+	<string name="progress_info">Retrieving data. Please wait...</string>
+	<string name="empty_search">Search field cannot be empty</string>
 </resources>
