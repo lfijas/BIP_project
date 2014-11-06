@@ -14,8 +14,10 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +61,22 @@ public class MainActivity extends Activity {
 				else {
 					Toast.makeText(MainActivity.this,R.string.no_network, Toast.LENGTH_LONG).show();
 				}
+			}
+		});
+		searchText.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_DOWN) {
+					switch (keyCode) {
+					case KeyEvent.KEYCODE_ENTER:
+						searchButton.performClick();
+						return true;
+					default:
+						break;
+					}
+				}
+				return false;
 			}
 		});
 		
