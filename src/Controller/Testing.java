@@ -14,12 +14,6 @@ public class Testing {
         Product result = myUnit.getProductInfo("8410199272393");
         assertEquals(result.getName(), "Doritos Nacho cheese");
         
-        result = myUnit.getProductInfo("");
-        assertNull(result);
-        
-        result = myUnit.getProductInfo("grawgewcwc");
-        assertNull(result);
-        
         result = myUnit.getProductInfo("235345213");
         assertNull(result);
 

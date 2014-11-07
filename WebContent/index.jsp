@@ -5,12 +5,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<script type="text/javascript" src="jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jquery/jquery.validate.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/Nutrition/RetrieveNutritionalData" method="get">
-		product barcode: <input type="text" name="barcode">
+	<form id="getNutrition" action="/Nutrition/RetrieveNutritionalData" method="get">
+		product barcode: <input type="digits" name="barcode" required />
 		<input type="submit" value="Submit">
+		<input type="button" value="Add product" onclick="window.location.replace('addNewProduct.jsp');">
 	</form>
 	
 	<div><% if (request.getParameter("barcode") != null) {
@@ -18,7 +21,9 @@
 					Product product = (Product)request.getAttribute("data");
 					out.print("<table><tr><td>Product Name:</td><td>" + product.getName() + "</td></tr>");
 					out.print("<tr><td>Brand Name:</td><td>" + product.getBrand() + "</td></tr>");
-					out.print("<tr><td>Quantity:</td><td>" + product.getUnitSize() + "</td></tr>");
+					if (product.getSize() >= 0) {
+						out.print("<tr><td>Quantity:</td><td>" + product.getSize() + " " + product.getUnitSize() + "</td></tr>");
+					}
 					out.print("<tr><td>Nutritional data per 100g</td><td></td></tr>");
 					if (product.getCalories() >= 0) {
 						out.print("<tr><td>Calories:</td><td>" + product.getCalories() + " kj</td></tr>");
@@ -64,5 +69,10 @@
 					out.print("product is not found or the barcode is incorrect");
 				}
 			} %></div>
+			
+			
+	<script type="text/javascript">
+		$("#getNutrition").validate();
+	</script>
 </body>
 </html>

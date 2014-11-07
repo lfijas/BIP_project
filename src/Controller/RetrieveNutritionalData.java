@@ -1,23 +1,14 @@
 package Controller;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Model.Brand;
 import Model.Product;
 
 public class RetrieveNutritionalData extends HttpServlet {
@@ -32,14 +23,19 @@ public class RetrieveNutritionalData extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		//response.setCharacterEncoding( "UTF-8" );
 		
-		String barcode = request.getParameter("barcode");
-		Product product = getProductInfo(barcode);
-		
 		try {
-			request.setAttribute("data", product);
-			getServletConfig().getServletContext()
-					.getRequestDispatcher("/index.jsp")
-					.forward(request, response);
+			String barcode = request.getParameter("barcode");
+			if (request.getParameter("check") == null) {
+				Product product = getProductInfo(barcode);
+				request.setAttribute("data", product);
+				getServletConfig().getServletContext()
+						.getRequestDispatcher("/index.jsp")
+						.forward(request, response);
+			} else {
+				response.setContentType("text/plain");
+			    response.setCharacterEncoding("UTF-8");
+			    response.getWriter().write(Product.isDuplicatedId(barcode)?"1":"0");
+			}
 		} catch (ServletException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -48,15 +44,56 @@ public class RetrieveNutritionalData extends HttpServlet {
 
 	}
 	
-	protected Product getProductInfo(String barcode) {
-		Product product = null;
-		if (isNumeric(barcode)) {
-			product = Product.GetProductByBarcode(barcode);
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		
+		Product product = new Product();
+		product.setCode(request.getParameter("barcode"));
+		product.setName(request.getParameter("name"));
+		product.setBrand(request.getParameter("brand"));
+		product.setFoodGroup(request.getParameter("group"));
+		product.setSize(checkNumberIsEmpty(request, "size"));
+		if (checkNumberIsEmpty(request, "size") < 0) {
+			product.setUnitSize(null);
+		} else {
+			product.setUnitSize("'" + request.getParameter("unit") + "'");
 		}
-		return product;
+		product.setCalories(checkNumberIsEmpty(request, "calory"));
+		product.setProteins(checkNumberIsEmpty(request, "protein"));
+		product.setCarbohydrates(checkNumberIsEmpty(request, "carb"));
+		product.setSugar(checkNumberIsEmpty(request, "sugar"));
+		product.setFat(checkNumberIsEmpty(request, "fat"));
+		product.setSaturatedFat(checkNumberIsEmpty(request, "sat_fat"));
+		product.setCholesterol(checkNumberIsEmpty(request, "choles"));
+		product.setFiber(checkNumberIsEmpty(request, "fiber"));
+		product.setSodium(checkNumberIsEmpty(request, "sodium"));
+		product.setVitaminA(checkNumberIsEmpty(request, "vita"));
+		product.setVitaminC(checkNumberIsEmpty(request, "vitc"));
+		product.setCalcium(checkNumberIsEmpty(request, "calcium"));
+		product.setIron(checkNumberIsEmpty(request, "iron"));
+		
+		int status = Product.addProduct(product);
+		
+		try {
+				request.setAttribute("data", product);
+				getServletConfig().getServletContext()
+						.getRequestDispatcher("/index.jsp")
+						.forward(request, response);
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
-	private static boolean isNumeric(String str) {
-	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+	protected Product getProductInfo(String barcode) {
+		return Product.GetProductByBarcode(barcode);
+	}
+	
+	private double checkNumberIsEmpty(HttpServletRequest request, String param) {
+		if (!request.getParameter(param).isEmpty()) {
+			return Double.parseDouble(request.getParameter(param));
+		} else {
+			return -1;
+		}
 	}
 }
