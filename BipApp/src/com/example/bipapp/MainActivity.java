@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -18,6 +19,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +35,8 @@ public class MainActivity extends Activity {
 	private TextView infoTextView;
 	private Button searchButton;
 	private EditText searchText;
+	
+	public final static String EXTRA_MESSAGE = "com.example.bipapp.message";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +123,18 @@ public class MainActivity extends Activity {
 			
 			arrayAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, result);
 			searchResults.setAdapter(arrayAdapter);
+			searchResults.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					
+					Intent intent = new Intent(mContext, NutritionInfoActivity.class);
+					String product = ((TextView)arg1).getText().toString();
+					intent.putExtra(EXTRA_MESSAGE, product);
+					startActivity(intent);
+				}
+			});
 		}
 		
 		public ArrayList<String> connectToDatabase(String productName) {
