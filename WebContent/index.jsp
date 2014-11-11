@@ -21,6 +21,7 @@
 					Product product = (Product)request.getAttribute("data");
 					out.print("<table><tr><td>Product Name:</td><td>" + product.getName() + "</td></tr>");
 					out.print("<tr><td>Brand Name:</td><td>" + product.getBrand() + "</td></tr>");
+					out.print("<tr><td>Food Group:</td><td>" + product.getFoodGroup() + "</td></tr>");
 					if (product.getSize() >= 0) {
 						out.print("<tr><td>Quantity:</td><td>" + product.getSize() + " " + product.getUnitSize() + "</td></tr>");
 					}

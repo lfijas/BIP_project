@@ -1,8 +1,13 @@
 package Model;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import Model.DBConnector;
 
@@ -187,30 +192,12 @@ public class Product {
 		Product product = null;
 		DBConnector.connect();
 		
-		ResultSet result = DBConnector.query("SELECT * from Product p, Brand b WHERE p.brand_id = b.id and barcode = '" + barcode + "'");
+		ResultSet result = DBConnector.query("SELECT * from Product p LEFT JOIN Brand b on p.brand_id = b.id LEFT JOIN Food_groups g on p.group_id = g.id WHERE barcode = '" + barcode + "'");
 		
 		try {
 			if (result != null && result.next()) {
 				product = new Product();
-				product.code = result.getString("barcode");
-				product.name = (String) isNull(result, "product_name", "string");
-				product.brand = (String) isNull(result, "brand_name", "string");
-				product.size = (double) isNull(result, "quantity_number", "double");
-				product.unitSize = (String) isNull(result, "unit", "string");
-				product.calories = (double) isNull(result, "calories", "double");
-				product.proteins = (double) isNull(result, "proteins_100", "double");
-				product.carbohydrates = (double) isNull(result, "carbohydrates_100", "double");
-				product.sugar = (double) isNull(result, "sugar_100", "double");
-				product.fat = (double) isNull(result, "fat_100", "double");
-				product.saturatedFat = (double) isNull(result, "saturated_fat_100", "double");
-				product.cholesterol = (double) isNull(result, "cholesterol_100", "double");
-				product.fiber = (double) isNull(result, "fiber_100", "double");
-				product.sodium = (double) isNull(result, "sodium_100", "double");
-				product.vitaminA = (double) isNull(result, "vitamin_a", "double");
-				product.vitaminC = (double) isNull(result, "vitamin_c", "double");
-				product.calcium = (double) isNull(result, "calcium_100", "double");
-				product.iron = (double) isNull(result, "iron_100", "double");
-				
+				setProduct(product, result);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -219,6 +206,93 @@ public class Product {
 		
 		DBConnector.closeConnection();
 		return product;
+	}
+	
+	public static ArrayList<Product> getProductsByMultipleBarcodes(String[] barcodes)
+	{	
+		ArrayList<Product> productList = new ArrayList<Product>();
+		DBConnector.connect();
+		
+		String query = "SELECT * from Product p LEFT JOIN Brand b on p.brand_id = b.id LEFT JOIN Food_groups g on p.group_id = g.id WHERE (barcode = " + barcodes[0];
+		for (int i = 1; i < barcodes.length; i++) {
+			query += " or barcode = " + barcodes[i];
+		}
+		query += ")";
+		ResultSet result = DBConnector.query(query);
+		
+		try {
+			while (result.next()) {
+				Product product = new Product();
+				setProduct(product, result);
+				productList.add(product);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return productList;
+	}
+	
+	public static Product getNutritionalSummary(String[] barcodes)
+	{	
+		Product product = null;
+		DBConnector.connect();
+		
+		String query = "SELECT SUM(calories) as calories,SUM(proteins_100) as proteins_100,SUM(carbohydrates_100) as carbohydrates_100,SUM(sugar_100) as sugar_100,SUM(fat_100) as fat_100,SUM(saturated_fat_100) as saturated_fat_100"
+				+ ",SUM(cholesterol_100) as cholesterol_100,SUM(fiber_100) as fiber_100,SUM(sodium_100) as sodium_100,SUM(vitamin_a) as vitamin_a,SUM(vitamin_c) as vitamin_c,SUM(calcium_100) as calcium_100,SUM(iron_100) as iron_100 from Product WHERE barcode = " + barcodes[0];
+		for (int i = 1; i < barcodes.length; i++) {
+			query += " or barcode = " + barcodes[i];
+		}
+		ResultSet result = DBConnector.query(query);
+		
+		try {
+			if (result != null && result.next()) {
+				product = new Product();
+				product.calories = roundTo2Decimals(result.getDouble("calories"));
+				product.proteins = roundTo2Decimals(result.getDouble("proteins_100"));			
+				product.carbohydrates = roundTo2Decimals(result.getDouble("carbohydrates_100"));
+				product.sugar = roundTo2Decimals(result.getDouble("sugar_100"));				
+				product.fat = roundTo2Decimals(result.getDouble("fat_100"));		
+				product.saturatedFat = roundTo2Decimals(result.getDouble("saturated_fat_100"));	
+				product.cholesterol = roundTo2Decimals(result.getDouble("cholesterol_100"));		
+				product.fiber = roundTo2Decimals(result.getDouble("fiber_100"));				
+				product.sodium = roundTo2Decimals(result.getDouble("sodium_100"));		
+				product.vitaminA = roundTo2Decimals(result.getDouble("vitamin_a"));			
+				product.vitaminC = roundTo2Decimals(result.getDouble("vitamin_c"));
+				product.calcium = roundTo2Decimals(result.getDouble("calcium_100"));				
+				product.iron = roundTo2Decimals(result.getDouble("iron_100"));				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return product;
+	}
+	
+	private static void setProduct(Product product, ResultSet result) throws SQLException {
+		product.code = result.getString("barcode");
+		product.name = (String)isNull(result, "product_name", "string");
+		product.brand = (String) isNull(result, "brand_name", "string");
+		product.foodGroup = (String) isNull(result, "group_name", "string");
+		product.size = (double) isNull(result, "quantity_number", "double");
+		product.unitSize = (String) isNull(result, "unit", "string");
+		product.calories = (double) isNull(result, "calories", "double");
+		product.proteins = (double) isNull(result, "proteins_100", "double");
+		product.carbohydrates = (double) isNull(result, "carbohydrates_100", "double");
+		product.sugar = (double) isNull(result, "sugar_100", "double");
+		product.fat = (double) isNull(result, "fat_100", "double");
+		product.saturatedFat = (double) isNull(result, "saturated_fat_100", "double");
+		product.cholesterol = (double) isNull(result, "cholesterol_100", "double");
+		product.fiber = (double) isNull(result, "fiber_100", "double");
+		product.sodium = (double) isNull(result, "sodium_100", "double");
+		product.vitaminA = (double) isNull(result, "vitamin_a", "double");
+		product.vitaminC = (double) isNull(result, "vitamin_c", "double");
+		product.calcium = (double) isNull(result, "calcium_100", "double");
+		product.iron = (double) isNull(result, "iron_100", "double");
 	}
 	
 	public static boolean isDuplicatedId(String barcode) {
