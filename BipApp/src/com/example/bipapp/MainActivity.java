@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 
 	private ListView searchResults;
 	private ArrayAdapter<Product> arrayAdapter;
+	private ArrayList<Product> mProductList;
 	private TextView infoTextView;
 	private Button searchButton;
 	private EditText searchText;
@@ -85,6 +86,13 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		if (savedInstanceState != null && savedInstanceState.containsKey("products")) {
+			mProductList = savedInstanceState.getParcelableArrayList("products");
+			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, mProductList);
+			searchResults = (ListView) findViewById(R.id.search_result_list_view);
+			searchResults.setAdapter(arrayAdapter);
+		}
+		
 	}
 
 	@Override
@@ -92,6 +100,12 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putParcelableArrayList("products", mProductList);
+		super.onSaveInstanceState(outState);
 	}
 	
 	private class DbConnection extends AsyncTask<String, Void, ArrayList<Product>> {
@@ -121,7 +135,8 @@ public class MainActivity extends Activity {
 			searchButton.setEnabled(true);
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			
-			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, result);
+			mProductList = result;
+			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, mProductList);
 			searchResults.setAdapter(arrayAdapter);
 			searchResults.setOnItemClickListener(new OnItemClickListener() {
 

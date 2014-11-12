@@ -1,6 +1,9 @@
 package com.example.bipapp;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Product implements Parcelable{
 	private String mName;
 	private String mBarcode;
 	
@@ -28,6 +31,18 @@ public class Product {
 	@Override
 	public String toString() {
 		return this.mName;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(mName);
+		dest.writeString(mBarcode);
 	}
 	
 }
