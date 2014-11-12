@@ -17,5 +17,14 @@
         <url-pattern>/RetrieveNutritionalData</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+      <servlet-name>NutritionalDataSummary</servlet-name>
+      <servlet-class>Controller.NutritionalDataSummary</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NutritionalDataSummary</servlet-name>
+        <url-pattern>/NutritionalDataSummary</url-pattern>
+    </servlet-mapping>
+    
 
 </web-app>
