@@ -26,27 +26,47 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class NutritionInfoActivity extends Activity {
+	
+	private TextView mName;
+	private TextView mCalories;
+	private TextView mSugar;
+	private TextView mCarbohydrates;
+	private TextView mProteins;
+	private TextView mFat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nutrition_info);
 		
-		Intent intent = getIntent();
-		String productBarcode = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+		mName = (TextView) findViewById(R.id.product_name_text);
+		mCalories = (TextView) findViewById(R.id.calories_text);
+		mSugar = (TextView) findViewById(R.id.sugar_text);
+		mCarbohydrates = (TextView) findViewById(R.id.carbohydrates_text);
+		mProteins = (TextView) findViewById(R.id.proteins_text);
+		mFat = (TextView) findViewById(R.id.fat_text);
 		
-		//TextView textView = (TextView) findViewById(R.id.product_name_text);
-		//textView.setText(productBarcode);
-		
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		if (networkInfo != null && networkInfo.isConnected()) {
-			new DbConnection(NutritionInfoActivity.this).execute(productBarcode);
-			}
-		else {
-			Toast.makeText(NutritionInfoActivity.this,R.string.no_network, Toast.LENGTH_LONG).show();
+		if (savedInstanceState != null) {
+			mName.setText(savedInstanceState.getString("product"));
+			mCalories.setText(savedInstanceState.getString("calories"));
+			mSugar.setText(savedInstanceState.getString("sugar"));
+			mCarbohydrates.setText(savedInstanceState.getString("carbohydrates"));
+			mProteins.setText(savedInstanceState.getString("proteins"));
+			mFat.setText(savedInstanceState.getString("fat"));
 		}
-		
+		else {
+			Intent intent = getIntent();
+			String productBarcode = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+			
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null && networkInfo.isConnected()) {
+				new DbConnection(NutritionInfoActivity.this).execute(productBarcode);
+				}
+			else {
+				Toast.makeText(NutritionInfoActivity.this,R.string.no_network, Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	@Override
@@ -54,6 +74,17 @@ public class NutritionInfoActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.nutrition_info, menu);
 		return true;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putString("product", mName.getText().toString());
+		outState.putString("calories", mCalories.getText().toString());
+		outState.putString("sugar", mSugar.getText().toString());
+		outState.putString("carbohydrates", mCarbohydrates.getText().toString());
+		outState.putString("proteins", mProteins.getText().toString());
+		outState.putString("fat", mFat.getText().toString());
+		super.onSaveInstanceState(outState);
 	}
 	
 	private class DbConnection extends AsyncTask<String, Void, Hashtable<String, String>> {
@@ -78,25 +109,6 @@ public class NutritionInfoActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Hashtable<String, String> hs) {
-			//TextView infoTextView = (TextView) findViewById(R.id.info_text);
-			//infoTextView.setVisibility(View.GONE);
-			//searchButton.setEnabled(true);
-			//searchResults = (ListView) findViewById(R.id.search_result_list_view);
-			
-			//arrayAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, result);
-			//searchResults.setAdapter(arrayAdapter);
-			/*searchResults.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					
-					Intent intent = new Intent(mContext, NutritionInfoActivity.class);
-					String product = ((TextView)arg1).getText().toString();
-					intent.putExtra(EXTRA_MESSAGE, product);
-					startActivity(intent);
-				}
-			});*/
 			TextView name = (TextView) findViewById(R.id.product_name_text);
 			name.setText(hs.get("name"));
 			TextView calories = (TextView) findViewById(R.id.calories_text);

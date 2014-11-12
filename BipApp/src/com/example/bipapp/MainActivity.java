@@ -36,6 +36,8 @@ public class MainActivity extends Activity {
 	private TextView infoTextView;
 	private Button searchButton;
 	private EditText searchText;
+	private OnItemClickListener mItemClickListener = null;
+	
 	
 	public final static String EXTRA_MESSAGE = "com.example.bipapp.message";
 	
@@ -47,6 +49,21 @@ public class MainActivity extends Activity {
 		searchButton = (Button) findViewById(R.id.search_button);
 		searchText = (EditText) findViewById(R.id.search_text);
 		infoTextView = (TextView) findViewById(R.id.info_text);
+		if (mItemClickListener == null) {
+			mItemClickListener = new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					
+					Intent intent = new Intent(MainActivity.this, NutritionInfoActivity.class);
+					String productBarcode = arrayAdapter.getItem(arg2).getBarcode();
+					intent.putExtra(EXTRA_MESSAGE, productBarcode);
+					startActivity(intent);
+				}
+			};
+		}
+		
 		searchButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -91,6 +108,7 @@ public class MainActivity extends Activity {
 			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, mProductList);
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			searchResults.setAdapter(arrayAdapter);
+			searchResults.setOnItemClickListener(mItemClickListener);
 		}
 		
 	}
@@ -103,7 +121,7 @@ public class MainActivity extends Activity {
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList("products", mProductList);
 		super.onSaveInstanceState(outState);
 	}
@@ -138,18 +156,7 @@ public class MainActivity extends Activity {
 			mProductList = result;
 			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, mProductList);
 			searchResults.setAdapter(arrayAdapter);
-			searchResults.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					
-					Intent intent = new Intent(mContext, NutritionInfoActivity.class);
-					String productBarcode = arrayAdapter.getItem(arg2).getBarcode();
-					intent.putExtra(EXTRA_MESSAGE, productBarcode);
-					startActivity(intent);
-				}
-			});
+			searchResults.setOnItemClickListener(mItemClickListener);
 		}
 		
 		public ArrayList<Product> connectToDatabase(String productName) {
