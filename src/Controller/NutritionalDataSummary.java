@@ -129,7 +129,7 @@ public class NutritionalDataSummary extends HttpServlet {
 			try {
 				Document document = new Document(PageSize.LETTER);
 				PdfWriter.getInstance(document,
-						new FileOutputStream("/Users/vamhan/Downloads/apache-tomcat-7.0.52/webapps/ROOT/Nutrition/WebContent/testpdf1.pdf"));
+						new FileOutputStream(System.getProperty("user.home") + "/Desktop/testpdf1.pdf"));
 				document.open();
 
 				HTMLWorker htmlWorker = new HTMLWorker(document);

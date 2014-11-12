@@ -1,6 +1,6 @@
 <%    
   String filename = "testpdf1.pdf";   
-  String filepath = "/Users/vamhan/Downloads/apache-tomcat-7.0.52/webapps/ROOT/Nutrition/WebContent/";   
+  String filepath = System.getProperty("user.home") + "/Desktop/";   
   response.setContentType("APPLICATION/OCTET-STREAM");   
   response.setHeader("Content-Disposition","attachment; filename=\"" + filename + "\"");   
   
