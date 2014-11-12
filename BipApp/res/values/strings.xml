@@ -10,5 +10,11 @@
     <string name="progress_info">Retrieving data. Please wait...</string>
     <string name="empty_search">Search field cannot be empty</string>
     <string name="title_activity_nutrition_info">Nutritional Info</string>
+    <string name="fat_label">Fat: </string>
+    <string name="sugar_label">Sugar: </string>
+    <string name="carbohydrates_label">Carbohydrates: </string>
+    <string name="proteins_label">Proteins: </string>
+    <string name="calories_label">Calories: </string>
+    <string name="product_label">Product: </string>
 
 </resources>
