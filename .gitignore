@@ -2,4 +2,5 @@ BipApp/bin
 BipApp/.classpath
 BipApp/gen
 *~
+.classpath
 

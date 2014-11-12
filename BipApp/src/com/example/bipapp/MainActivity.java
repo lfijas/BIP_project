@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -18,6 +19,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,10 +31,12 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	private ListView searchResults;
-	private ArrayAdapter arrayAdapter;
+	private ArrayAdapter<Product> arrayAdapter;
 	private TextView infoTextView;
 	private Button searchButton;
 	private EditText searchText;
+	
+	public final static String EXTRA_MESSAGE = "com.example.bipapp.message";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +94,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	private class DbConnection extends AsyncTask<String, Void, ArrayList<String>> {
+	private class DbConnection extends AsyncTask<String, Void, ArrayList<Product>> {
 		
 		private Context mContext;
 		
@@ -98,7 +103,7 @@ public class MainActivity extends Activity {
 		}
 		
 		@Override
-		protected ArrayList<String> doInBackground(String... params) {
+		protected ArrayList<Product> doInBackground(String... params) {
 			publishProgress();
 			return connectToDatabase(params[0]);
 		}
@@ -110,20 +115,32 @@ public class MainActivity extends Activity {
 		}
 		
 		@Override
-		protected void onPostExecute(ArrayList<String> result) {
+		protected void onPostExecute(ArrayList<Product> result) {
 			//TextView infoTextView = (TextView) findViewById(R.id.info_text);
 			infoTextView.setVisibility(View.GONE);
 			searchButton.setEnabled(true);
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			
-			arrayAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, result);
+			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, result);
 			searchResults.setAdapter(arrayAdapter);
+			searchResults.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					
+					Intent intent = new Intent(mContext, NutritionInfoActivity.class);
+					String productBarcode = arrayAdapter.getItem(arg2).getBarcode();
+					intent.putExtra(EXTRA_MESSAGE, productBarcode);
+					startActivity(intent);
+				}
+			});
 		}
 		
-		public ArrayList<String> connectToDatabase(String productName) {
+		public ArrayList<Product> connectToDatabase(String productName) {
 		    
 			Connection conn = null;
-			ArrayList<String> resultArrayList = null;
+			ArrayList<Product> resultArrayList = null;
 			
 			try {
 		        Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
@@ -133,14 +150,15 @@ public class MainActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        ResultSet resultSet = statement.executeQuery("SELECT product_name  FROM Product" +
+		        ResultSet resultSet = statement.executeQuery("SELECT product_name, barcode FROM Product" +
 		        		" WHERE product_name like '%" + productName + "%' collate SQL_Latin1_General_CP1_CI_AI");
 		 
 
-		        resultArrayList = new ArrayList<String>();
+		        resultArrayList = new ArrayList<Product>();
 				try {
 					while (resultSet != null && resultSet.next()) {
-						resultArrayList.add(resultSet.getString("product_name").replaceAll("&quot;", "\""));
+						resultArrayList.add(new Product(resultSet.getString("product_name").
+									replaceAll("&quot;", "\""), resultSet.getString("barcode")));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
