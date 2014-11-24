@@ -108,9 +108,9 @@ public class LoginActivity extends Activity {
 				loginInfoText.setTextColor(Color.RED);
 				loginButton.setVisibility(View.VISIBLE);
 				usernameEditText.setVisibility(View.VISIBLE);
-				usernameEditText.setVisibility(View.VISIBLE);
+				passwordEditText.setVisibility(View.VISIBLE);
 				usernameEditText.setText("");
-				usernameEditText.setText("");
+				passwordEditText.setText("");
 			}
 		}
 		

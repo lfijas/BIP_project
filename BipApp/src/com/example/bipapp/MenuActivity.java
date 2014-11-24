@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MenuActivity extends Activity {
 	
@@ -40,8 +41,30 @@ public class MenuActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
-				startActivity(intent);
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				if (!settings.getString("username", "").equals("")) {
+					Intent intent = new Intent(MenuActivity.this, BrowsePurchaseHistoryActivity.class);
+					startActivity(intent);
+				}
+				else {
+					Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
+					startActivity(intent);
+				}
+			}
+		});
+		
+		logoutButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				SharedPreferences.Editor editor = settings.edit();
+				editor.remove("username");
+				editor.remove("user_id");
+				editor.commit();
+				logoutButton.setVisibility(View.GONE);
+				greetingText.setVisibility(View.GONE);
+				Toast.makeText(MenuActivity.this, R.string.logout_info, Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -53,7 +76,7 @@ public class MenuActivity extends Activity {
 		String username = settings.getString("username", "");
 		if (!username.equals("")) {
 			logoutButton.setVisibility(View.VISIBLE);
-			greetingText.setText(R.string.greeting + username);
+			greetingText.setText("Hi, " + username);
 			greetingText.setVisibility(View.VISIBLE);
 		}
 	}

@@ -29,5 +29,6 @@
     <string name="title_activity_browse_purchase_history">Purchase History</string>
     <string name="logout">Logout</string>
     <string name="greeting">Hi, </string>
+    <string name="logout_info">You have been logged out.</string>
 
 </resources>
