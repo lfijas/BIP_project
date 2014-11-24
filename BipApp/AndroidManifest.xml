@@ -40,7 +40,12 @@
         </activity>
         <activity
             android:name="com.example.bipapp.LoginActivity"
-            android:label="@string/title_activity_login" 
+            android:label="@string/title_activity_login"
+            android:parentActivityName="com.example.bip.MenuActivity" >
+        </activity>
+        <activity
+            android:name="com.example.bipapp.BrowsePurchaseHistoryActivity"
+            android:label="@string/title_activity_browse_purchase_history"
             android:parentActivityName="com.example.bip.MenuActivity" >
         </activity>
     </application>

@@ -8,6 +8,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".MenuActivity" >
+    
+    <TextView 
+	    android:id="@+id/greeting_text"
+	    android:visibility="gone"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="10dp"
+	    android:layout_marginLeft="5dp"/>
 
     <Button android:id="@+id/browseProductCatalog"
         android:layout_width="match_parent"
@@ -20,5 +28,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/browse_purchase_history" />
+    
+    <Button android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:text="@string/logout" />
 
 </LinearLayout>

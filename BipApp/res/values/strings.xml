@@ -23,5 +23,11 @@
     <string name="username_hint">Enter username</string>
     <string name="password_hint">Enter password</string>
     <string name="login">Login</string>
+    <string name="username_password_empty">Neither username nor password can be empty.</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="login_failure">Unable to login! Please use valid credentials.</string>
+    <string name="title_activity_browse_purchase_history">Purchase History</string>
+    <string name="logout">Logout</string>
+    <string name="greeting">Hi, </string>
 
 </resources>

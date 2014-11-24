@@ -1,16 +1,21 @@
 package com.example.bipapp;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MenuActivity extends Activity {
 	
 	private Button browseProductCatalogButton;
 	private Button browseProductHistoryButton;
+	private Button logoutButton;
+	private TextView greetingText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,8 @@ public class MenuActivity extends Activity {
 		
 		browseProductCatalogButton = (Button) findViewById(R.id.browseProductCatalog);
 		browseProductHistoryButton = (Button) findViewById(R.id.browsePurchaseHistory);
+		logoutButton = (Button) findViewById(R.id.logoutButton);
+		greetingText = (TextView) findViewById(R.id.greeting_text);
 		
 		browseProductCatalogButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -37,6 +44,18 @@ public class MenuActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MenuActivity.this);
+		String username = settings.getString("username", "");
+		if (!username.equals("")) {
+			logoutButton.setVisibility(View.VISIBLE);
+			greetingText.setText(R.string.greeting + username);
+			greetingText.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
