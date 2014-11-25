@@ -102,6 +102,7 @@ public class LoginActivity extends Activity {
 			if (result.equals("1")) {
 				Intent intent = new Intent(mContext, BrowsePurchaseHistoryActivity.class);
 				startActivity(intent);
+				finish();
 			}
 			else {
 				loginInfoText.setText(R.string.login_failure);
