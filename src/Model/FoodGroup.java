@@ -18,7 +18,7 @@ public class FoodGroup {
 	public static int getFoodGroupId(String name) {
 			
 		DBConnector.connect();
-		ResultSet result = DBConnector.query("SELECT id from Food_groups WHERE name = '" + name + "'");
+		ResultSet result = DBConnector.query("SELECT id from Food_groups WHERE group_name like '%" + name + "%'");
 		try {
 			if (result != null && result.next()) {
 				return result.getInt("id");

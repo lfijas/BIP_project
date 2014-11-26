@@ -26,5 +26,14 @@
         <url-pattern>/NutritionalDataSummary</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+      <servlet-name>HtmlToPDF</servlet-name>
+      <servlet-class>Controller.HtmlToPDF</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HtmlToPDF</servlet-name>
+        <url-pattern>/HtmlToPDF</url-pattern>
+    </servlet-mapping>
+    
 
 </web-app>

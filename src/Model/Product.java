@@ -321,7 +321,7 @@ public class Product {
 				brandId = Brand.addBrand(brandName) + "";
 			}
 		}
-		String foodGroup = product.foodGroup;
+		int foodGroup = FoodGroup.getFoodGroupId(product.foodGroup);
 		DBConnector.connect();
 		String query = "INSERT INTO Product (barcode, product_name, brand_id, group_id, quantity_number, unit, calories, proteins_100, carbohydrates_100, "
 				+ "sugar_100, fat_100, saturated_fat_100, cholesterol_100, fiber_100, sodium_100, vitamin_a, vitamin_c, calcium_100, iron_100"

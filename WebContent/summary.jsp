@@ -14,8 +14,9 @@
 </head>
 <body>
 	<form id="getNutrition" action="/Nutrition/NutritionalDataSummary" method="get">
-		<div name="barcode_div">product barcode: <input type="digits" name="barcode" required /></div>
-		<input type="submit" value="Submit">
+		<div>userID: <input type="digits" name="userID" required /></div>
+		<div name="barcode_div">product barcode: <input type="digits" name="barcode" required /> amount: <input type="number" name="amount" value="1" style="width:50px" required /></div>
+		<input type="button" value="Submit" onclick="validate();">
 		<input type="button" value="Add product" onclick="addProduct();">
 	</form>
 	
@@ -24,7 +25,6 @@
 					String text = (String)request.getAttribute("data");
 					
 					out.print(text);
-					out.print("<a href='download.jsp'><input id='download' type='button' value='Print as PDF' onclick='printPDF();'/></a>");
 				} else {
 					out.print("product is not found or the barcode is incorrect");
 				}
@@ -32,24 +32,56 @@
 	</div>
 	
 	<script type="text/javascript">
-		$("#getNutrition").validate();
+		//$("#getNutrition").validate();
 		
 		function addProduct() {
-			$("[name='barcode_div']").last().after('<div name="barcode_div">product barcode: <input type="digits" name="barcode" required /></div>');
+			$("[name='barcode_div']").last().after('<div name="barcode_div">product barcode: <input type="digits" name="barcode" required /> amount: <input type="number" name="amount" value="1" style="width:50px" required /></div>');
+		}
+		
+		function validate() {
+			var flag = true;
+			if ($("[name='userID']").val().match(/^\d+$/)) {
+				$("[name='barcode']").each(function() {
+					if (!$(this).val().match(/^\d+$/)) {
+						flag = false;
+					}
+				});
+				if (flag) {
+					$("[name='amount']").each(function() {
+						if (!$(this).val().match(/^\d+$/)) {
+							flag = false;
+						}
+					});
+					if (flag) {
+						$("form").submit();
+					} else {
+						alert("amount is required and accepted only digits");
+					}
+				} else {
+					alert("barcode is required and accepted only digits");
+				}
+			} else {
+				alert("userID is required and accepted only digits");
+			}
 		}
 		
 		$(function() {
 			$("[name='nutriVal']").hide();
-			$("[name='progressbar']").progressbar({
+			$("[name='progressbarN']").progressbar({
+				max: <% out.print((String)request.getAttribute("maxN")); %>,
 		        value: 0
 			});
-			$("[name='progressbar']").each(function() {
-	            myNewValue = parseInt($(this).siblings("[name='nutriVal']").val());
+			$("[name='progressbar']").progressbar({
+				max: <% out.print((String)request.getAttribute("max")); %>,
+		        value: 0
+			});
+			$(".ui-progressbar").each(function() {
+	            myNewValue = parseFloat($(this).siblings("[name='nutriVal']").val());
 	            $(this).progressbar("option", "value", myNewValue);
 	        });
 		    $(".ui-progressbar").height("20px");
 		    
-		    $("#table1").width("500px");
+		    $("#table1").width("600px");
 		    $("#table2").width("500px");
 		    $("#table3").width("500px");
 		    $("#cell1").width("40%");

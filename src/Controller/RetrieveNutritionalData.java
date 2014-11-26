@@ -75,9 +75,9 @@ public class RetrieveNutritionalData extends HttpServlet {
 		int status = Product.addProduct(product);
 		
 		try {
-				request.setAttribute("data", product);
+				request.setAttribute("data", "1");
 				getServletConfig().getServletContext()
-						.getRequestDispatcher("/index.jsp")
+						.getRequestDispatcher("/addNewProduct.jsp")
 						.forward(request, response);
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();

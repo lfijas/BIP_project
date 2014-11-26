@@ -27,13 +27,13 @@
 			<tr><td>Brand:</td><td><input type="text" name="brand"></td></tr>
 			<tr><td>Food Group:</td><td>
 				<select name="group">
-				  <option value="1">fruit</option>
-				  <option value="2">vegetable</option>
-				  <option value="3">meat</option>
-				  <option value="4">dairy</option>
-				  <option value="5">Grains, beans and legumes</option>
-				  <option value="6">confections</option>
-				  <option value="7">water</option>
+				  <option value="Fruit">fruit</option>
+				  <option value="Vegetable">vegetable</option>
+				  <option value="Meat">meat</option>
+				  <option value="Dairy">dairy</option>
+				  <option value="Grains">Grains, beans and legumes</option>
+				  <option value="Confections">confections</option>
+				  <option value="Water">water</option>
 				</select>
 			</td></tr>
 			<tr><td>Nutritional data (per 100g)</td><td></td></tr>
@@ -59,8 +59,8 @@
 	<script type="text/javascript">
 		$("#addNutrition").validate();
 		$(function() {
-			if ($("#status").val() == "0") {
-				alert("An error occurred. Please try again later");
+			if ("<%= request.getAttribute("data") %>" == "1") {
+				alert("new product information is saved in the database");
 			}
 		});
 		
