@@ -6,10 +6,17 @@ import android.os.Parcelable;
 public class Purchase implements Parcelable{
 	private String mDate;
 	private String mId;
+	private String mBranch;
 	
 	public Purchase(String date, String id) {
 		this.mDate = date;
 		this.mId = id;				
+	}
+	
+	public Purchase(String date, String id, String branch) {
+		this.mDate = date;
+		this.mId = id;
+		this.mBranch = branch;
 	}
 	
 	public String getDate() {
@@ -26,6 +33,14 @@ public class Purchase implements Parcelable{
 	
 	public void setId(String id) {
 		this.mId = id;
+	}
+	
+	public String getBranch() {
+		return this.mBranch;
+	}
+	
+	public void setBranch(String branch) {
+		this.mBranch = branch;
 	}
 	
 	@Override

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,7 +64,17 @@ public class PurchaseSummaryActivity extends Activity {
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("purchase_products")) {
 			mProductList = savedInstanceState.getParcelableArrayList("purchase_products");
-			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, mProductList);
+			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
+				@Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+			        View view = super.getView(position, convertView, parent);
+			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			        text1.setText(mProductList.get(position).getName());
+			        text2.setText(mProductList.get(position).getQuantityPrice());
+			        return view;
+			      }
+			    };
 			purchaseSummaryListView = (ListView) findViewById(R.id.purchase_summary_list_view);
 			purchaseSummaryListView.setAdapter(arrayAdapter);
 			purchaseSummaryListView.setOnItemClickListener(mItemClickListener);
@@ -116,7 +127,17 @@ public class PurchaseSummaryActivity extends Activity {
 		@Override
 		protected void onPostExecute(ArrayList<Product> result) {
 			mProductList = result;
-			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, mProductList);
+			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
+				@Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+			        View view = super.getView(position, convertView, parent);
+			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			        text1.setText(mProductList.get(position).getName());
+			        text2.setText(mProductList.get(position).getQuantityPrice());
+			        return view;
+			      }
+			    };
 			purchaseSummaryListView.setAdapter(arrayAdapter);
 			purchaseSummaryListView.setOnItemClickListener(mItemClickListener);
 		}
@@ -134,7 +155,7 @@ public class PurchaseSummaryActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        ResultSet resultSet = statement.executeQuery("SELECT product_name, Product.barcode AS barcode FROM Purchase_Product " +
+		        ResultSet resultSet = statement.executeQuery("SELECT product_name, Product.barcode AS barcode, price, quantity FROM Purchase_Product " +
 		        		"JOIN Product ON Purchase_Product.barcode = Product.barcode " +
 		        		"WHERE purchase_id = " + purchaseId);
 		 
@@ -143,7 +164,8 @@ public class PurchaseSummaryActivity extends Activity {
 				try {
 					while (resultSet != null && resultSet.next()) {
 						resultArrayList.add(new Product(resultSet.getString("product_name").
-									replaceAll("&quot;", "\""), resultSet.getString("barcode")));
+									replaceAll("&quot;", "\""), resultSet.getString("barcode"),
+									resultSet.getString("quantity"), resultSet.getString("price")));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

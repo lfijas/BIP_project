@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -69,7 +70,17 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("purchases")) {
 			mPurchaseList = savedInstanceState.getParcelableArrayList("purchases");
-			arrayAdapter = new ArrayAdapter<Purchase>(this, android.R.layout.simple_list_item_1, mPurchaseList);
+			arrayAdapter = new ArrayAdapter<Purchase>(this, android.R.layout.simple_list_item_2, android.R.id.text1, mPurchaseList){
+			    @Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+			        View view = super.getView(position, convertView, parent);
+			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			        text1.setText(mPurchaseList.get(position).getDate());
+			        text2.setText(mPurchaseList.get(position).getBranch());
+			        return view;
+			      }
+			    };
 			purchaseHistoryListView = (ListView) findViewById(R.id.purchase_history_list_view);
 			purchaseHistoryListView.setAdapter(arrayAdapter);
 			purchaseHistoryListView.setOnItemClickListener(mItemClickListener);
@@ -127,7 +138,17 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 			purchaseHistoryListView = (ListView) findViewById(R.id.purchase_history_list_view);
 			
 			mPurchaseList = result;
-			arrayAdapter = new ArrayAdapter<Purchase>(mContext, android.R.layout.simple_list_item_1, mPurchaseList);
+			arrayAdapter = new ArrayAdapter<Purchase>(mContext, android.R.layout.simple_list_item_2, android.R.id.text1, mPurchaseList){
+			    @Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+			        View view = super.getView(position, convertView, parent);
+			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			        text1.setText(mPurchaseList.get(position).getDate());
+			        text2.setText(mPurchaseList.get(position).getBranch());
+			        return view;
+			      }
+			    };
 			purchaseHistoryListView.setAdapter(arrayAdapter);
 			purchaseHistoryListView.setOnItemClickListener(mItemClickListener);
 		}
@@ -145,14 +166,15 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        ResultSet resultSet = statement.executeQuery("SELECT purchase_id, date_time FROM PurchaseHistory" +
+		        ResultSet resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
+		        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
 		        		" WHERE [user_id] = " + user_id);
 		 
 
 		        resultArrayList = new ArrayList<Purchase>();
 				try {
 					while (resultSet != null && resultSet.next()) {
-						resultArrayList.add(new Purchase(resultSet.getString("date_time"), resultSet.getString("purchase_id")));
+						resultArrayList.add(new Purchase(resultSet.getString("date_time"), resultSet.getString("purchase_id"), resultSet.getString("name")));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

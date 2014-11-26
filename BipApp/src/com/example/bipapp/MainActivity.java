@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -105,7 +106,17 @@ public class MainActivity extends Activity {
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("products")) {
 			mProductList = savedInstanceState.getParcelableArrayList("products");
-			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_1, mProductList);
+			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
+			    @Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+			        View view = super.getView(position, convertView, parent);
+			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			        text1.setText(mProductList.get(position).getName());
+			        text2.setText(mProductList.get(position).getBrand());
+			        return view;
+			      }
+			    };
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			searchResults.setAdapter(arrayAdapter);
 			searchResults.setOnItemClickListener(mItemClickListener);
@@ -154,7 +165,17 @@ public class MainActivity extends Activity {
 			searchResults = (ListView) findViewById(R.id.search_result_list_view);
 			
 			mProductList = result;
-			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_1, mProductList);
+			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
+					@Override
+					public View getView(int position, View convertView, ViewGroup parent) {
+				        View view = super.getView(position, convertView, parent);
+				        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+				        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+				        text1.setText(mProductList.get(position).getName());
+				        text2.setText(mProductList.get(position).getBrand());
+				        return view;
+				      }
+				    };
 			searchResults.setAdapter(arrayAdapter);
 			searchResults.setOnItemClickListener(mItemClickListener);
 		}
@@ -172,15 +193,16 @@ public class MainActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        ResultSet resultSet = statement.executeQuery("SELECT product_name, barcode FROM Product" +
-		        		" WHERE product_name like '%" + productName + "%' collate SQL_Latin1_General_CP1_CI_AI");
+		        ResultSet resultSet = statement.executeQuery("SELECT product_name, barcode, Brand.brand_name FROM Product " +
+		        		"JOIN Brand ON Product.brand_id = Brand.id " +
+		        		"WHERE product_name like '%" + productName + "%' collate SQL_Latin1_General_CP1_CI_AI");
 		 
 
 		        resultArrayList = new ArrayList<Product>();
 				try {
 					while (resultSet != null && resultSet.next()) {
 						resultArrayList.add(new Product(resultSet.getString("product_name").
-									replaceAll("&quot;", "\""), resultSet.getString("barcode")));
+									replaceAll("&quot;", "\""), resultSet.getString("barcode"), resultSet.getString("brand_name")));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
