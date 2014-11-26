@@ -2,5 +2,5 @@ BipApp/bin
 BipApp/.classpath
 BipApp/gen
 *~
-.classpath
+WebApp/build/classes
 
