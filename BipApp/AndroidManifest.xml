@@ -23,11 +23,7 @@
         </activity>
         <activity
             android:name="com.example.bipapp.NutritionInfoActivity"
-            android:label="@string/title_activity_nutrition_info"
-            android:parentActivityName="com.example.bipapp.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bip.MainActivity" />
+            android:label="@string/title_activity_nutrition_info" >
         </activity>
         <activity
             android:name="com.example.bipapp.MenuActivity"
@@ -47,6 +43,10 @@
             android:name="com.example.bipapp.BrowsePurchaseHistoryActivity"
             android:label="@string/title_activity_browse_purchase_history"
             android:parentActivityName="com.example.bip.MenuActivity" >
+        </activity>
+        <activity
+            android:name="com.example.bipapp.PurchaseSummaryActivity"
+            android:label="@string/title_activity_purchase_summary" >
         </activity>
     </application>
 

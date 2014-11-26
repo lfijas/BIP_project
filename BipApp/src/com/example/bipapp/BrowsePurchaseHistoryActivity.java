@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,7 +36,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	private OnItemClickListener mItemClickListener = null;
 	
 	
-	public final static String EXTRA_MESSAGE = "com.example.bipapp.message";
+	public final static String EXTRA_MESSAGE = "com.example.bipapp.purchaseId";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +50,14 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					
-					/*Intent intent = new Intent(BrowsePurchaseHistoryActivity.this, NutritionInfoActivity.class);
-					String productBarcode = arrayAdapter.getItem(arg2).getBarcode();
-					intent.putExtra(EXTRA_MESSAGE, productBarcode);
-					startActivity(intent);*/
+					Intent intent = new Intent(BrowsePurchaseHistoryActivity.this, PurchaseSummaryActivity.class);
+					String purchaseId = arrayAdapter.getItem(arg2).getId();
+					intent.putExtra(EXTRA_MESSAGE, purchaseId);
+					startActivity(intent);
 				}
 			};
 		}
 				
-		if (savedInstanceState != null && savedInstanceState.containsKey("purchases")) {
-			mPurchaseList = savedInstanceState.getParcelableArrayList("purchases");
-			arrayAdapter = new ArrayAdapter<Purchase>(this, android.R.layout.simple_list_item_1, mPurchaseList);
-		}
-		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String user_id = Integer.toString(settings.getInt("user_id", -1));
 		String user = settings.getString("username", "");
@@ -71,20 +67,28 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		greetingTextView = (TextView) findViewById(R.id.greeting_text_purchase);
 		greetingTextView.setText("Hi, " + user);
 		
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		if (networkInfo != null && networkInfo.isConnected()) {
-			if (!user_id.equals("-1")) {
-				new DbConnection(BrowsePurchaseHistoryActivity.this).execute(user_id);
-			}
-			else {
-				Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
-			}
+		if (savedInstanceState != null && savedInstanceState.containsKey("purchases")) {
+			mPurchaseList = savedInstanceState.getParcelableArrayList("purchases");
+			arrayAdapter = new ArrayAdapter<Purchase>(this, android.R.layout.simple_list_item_1, mPurchaseList);
+			purchaseHistoryListView = (ListView) findViewById(R.id.purchase_history_list_view);
+			purchaseHistoryListView.setAdapter(arrayAdapter);
+			purchaseHistoryListView.setOnItemClickListener(mItemClickListener);
 		}
 		else {
-			Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.no_network, Toast.LENGTH_LONG).show();
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null && networkInfo.isConnected()) {
+				if (!user_id.equals("-1")) {
+					new DbConnection(BrowsePurchaseHistoryActivity.this).execute(user_id);
+				}
+				else {
+					Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
+				}
+			}
+			else {
+				Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.no_network, Toast.LENGTH_LONG).show();
+			}
 		}
-		
 	}
 
 	@Override
