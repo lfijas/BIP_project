@@ -31,6 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:textSize="20sp" >
         <TextView
 	        android:layout_width="wrap_content"
@@ -49,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:textSize="20sp" >
         <TextView
 	        android:layout_width="wrap_content"
@@ -67,6 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:textSize="20sp" >
         <TextView
 	        android:layout_width="wrap_content"
@@ -85,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:textSize="20sp" >
         <TextView
 	        android:layout_width="wrap_content"
@@ -103,6 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:textSize="20sp" >
         <TextView
 	        android:layout_width="wrap_content"
@@ -111,6 +116,158 @@
 	        android:textSize="20sp" />
         <TextView
             android:id="@+id/fat_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/saturated_fat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/saturated_fat_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/saturated_fat_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/fiber_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/fiber_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/fiber_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/cholesterol_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/cholesterol_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/cholesterol_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/sodium_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/sodium_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/sodium_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/calcium_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/calcium_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/calcium_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/iron_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/iron_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/iron_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/vitamin_a_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/vitamin_a_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/vitamin_a_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp" />     
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/vitamin_c_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:textSize="20sp" >
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/vitamin_c_label"
+	        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/vitamin_c_text"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textSize="20sp" />     

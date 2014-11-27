@@ -16,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,18 +105,99 @@ public class NutritionInfoActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Hashtable<String, String> hs) {
+			String temp;
 			TextView name = (TextView) findViewById(R.id.product_name_text);
 			name.setText(hs.get("name"));
-			TextView calories = (TextView) findViewById(R.id.calories_text);
-			calories.setText(hs.get("calories"));
-			TextView sugar = (TextView) findViewById(R.id.sugar_text);
-			sugar.setText(hs.get("sugar"));
-			TextView carbohydrates = (TextView) findViewById(R.id.carbohydrates_text);
-			carbohydrates.setText(hs.get("carbohydrates"));
-			TextView proteins = (TextView) findViewById(R.id.proteins_text);
-			proteins.setText(hs.get("proteins"));
-			TextView fat = (TextView) findViewById(R.id.fat_text);
-			fat.setText(hs.get("fat"));
+			temp = hs.get("calories");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.calories_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.calories_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("sugar");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.sugar_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.sugar_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("carbohydrates");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.carbohydrates_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.carbohydrates_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("proteins");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.proteins_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.proteins_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("fat");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.fat_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.fat_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("fat");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.fat_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.fat_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("saturated_fat");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.saturated_fat_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.saturated_fat_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("fiber");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.fiber_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.fiber_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("cholesterol");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.cholesterol_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.cholesterol_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("sodium");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.sodium_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.sodium_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("calcium");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.calcium_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.calcium_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("iron");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.iron_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.iron_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("vitA");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.vitamin_a_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.vitamin_a_text);
+				calories.setText(temp);
+			}
+			temp = hs.get("vitC");
+			if (!temp.equals("")) {
+				((LinearLayout) findViewById(R.id.vitamin_c_layout)).setVisibility(View.VISIBLE);
+				TextView calories = (TextView) findViewById(R.id.vitamin_c_text);
+				calories.setText(temp);
+			}
+		}
+		
+		private String isNull(String s) {
+			if (s == null)
+				return "";
+			return s;
 		}
 		
 		public Hashtable<String, String> connectToDatabase(String productBarcode) {
@@ -132,38 +215,36 @@ public class NutritionInfoActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        resultSet = statement.executeQuery("SELECT product_name, fat_100, carbohydrates_100, sugar_100, calories, proteins_100  FROM Product" +
+		        resultSet = statement.executeQuery("SELECT * FROM Product" +
 		        		" WHERE barcode = " + productBarcode);
 		        if (resultSet!=null && resultSet.next()) {
-		        	String calories = resultSet.getString("calories");
-		        	if (calories == null) {
-		        		calories = "";
-		        	}
+		        	String calories = isNull(resultSet.getString("calories"));
 		        	nutritionalHash.put("calories", calories);
-		        	String sugar = resultSet.getString("sugar_100");
-		        	if (sugar== null) {
-		        		sugar = "";
-		        	}
+		        	String sugar = isNull(resultSet.getString("sugar_100"));
 		        	nutritionalHash.put("sugar", sugar);
-		        	String carbohydrates = resultSet.getString("carbohydrates_100");
-		        	if (carbohydrates == null) {
-		        		carbohydrates = "";
-		        	}
+		        	String carbohydrates = isNull(resultSet.getString("carbohydrates_100"));
 		        	nutritionalHash.put("carbohydrates", carbohydrates);
-		        	String proteins = resultSet.getString("proteins_100");
-		        	if (proteins == null) {
-		        		proteins = "";
-		        	}
+		        	String proteins = isNull(resultSet.getString("proteins_100"));
 		        	nutritionalHash.put("proteins", proteins);
-		        	String fat = resultSet.getString("fat_100");
-		        	if (fat == null) {
-		        		fat = "";
-		        	}
+		        	String fat = isNull(resultSet.getString("fat_100"));
 		        	nutritionalHash.put("fat", fat);
-		        	String name = resultSet.getString("product_name");
-		        	if (name == null) {
-		        		name = "";
-		        	}
+		        	String saturatedFat = isNull(resultSet.getString("saturated_fat_100"));
+		        	nutritionalHash.put("saturated_fat", saturatedFat);
+		        	String cholesterol = isNull(resultSet.getString("cholesterol_100"));
+		        	nutritionalHash.put("cholesterol", cholesterol);
+		        	String sodium = isNull(resultSet.getString("sodium_100"));
+		        	nutritionalHash.put("sodium", sodium);
+		        	String calcium = isNull(resultSet.getString("calcium_100"));
+		        	nutritionalHash.put("calcium", calcium);
+		        	String iron = isNull(resultSet.getString("iron_100"));
+		        	nutritionalHash.put("iron", iron);
+		        	String vitA = isNull(resultSet.getString("vitamin_a"));
+		        	nutritionalHash.put("vitA", vitA);
+		        	String vitC = isNull(resultSet.getString("vitamin_c"));
+		        	nutritionalHash.put("vitC", vitC);
+		        	String fiber = isNull(resultSet.getString("fiber_100"));
+		        	nutritionalHash.put("fiber", fiber);
+		        	String name = isNull(resultSet.getString("product_name"));
 		        	nutritionalHash.put("name", name.replaceAll("&quot;", "\""));
 		        }
 	        	conn.close();

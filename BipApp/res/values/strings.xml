@@ -16,6 +16,14 @@
     <string name="proteins_label">Proteins: </string>
     <string name="calories_label">Calories: </string>
     <string name="product_label">Product: </string>
+    <string name="saturated_fat_label">Saturated fat: </string>
+    <string name="fiber_label">Fiber: </string>
+    <string name="cholesterol_label">Cholesterol: </string>
+    <string name="sodium_label">Sodium: </string>
+    <string name="calcium_label">Calcium: </string>
+    <string name="iron_label">Iron: </string>
+    <string name="vitamin_a_label">Vitamin A: </string>
+    <string name="vitamin_c_label">Vitamin C: </string>
     <string name="title_product_catalog">Product catalog</string>
     <string name="browse_product_catalog">Browse product catalog</string>
     <string name="browse_purchase_history">Browse purchase history</string>

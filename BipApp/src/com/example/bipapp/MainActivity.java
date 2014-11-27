@@ -195,7 +195,8 @@ public class MainActivity extends Activity {
 		        Statement statement = conn.createStatement();
 		        ResultSet resultSet = statement.executeQuery("SELECT product_name, barcode, Brand.brand_name FROM Product " +
 		        		"JOIN Brand ON Product.brand_id = Brand.id " +
-		        		"WHERE product_name like '%" + productName + "%' collate SQL_Latin1_General_CP1_CI_AI");
+		        		"WHERE product_name like '%" + productName + "%' OR Brand.brand_name like '%" + productName + "%' " +
+		        				"collate SQL_Latin1_General_CP1_CI_AI");
 		 
 
 		        resultArrayList = new ArrayList<Product>();
