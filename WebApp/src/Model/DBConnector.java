@@ -10,13 +10,17 @@ import java.sql.Statement;
 
 public class DBConnector {
 	
-	static String host = "54.69.68.63";
-	static String port = "1433";
-	static String username = "Admin";
-	static String password = "BIP_project";
-	static String database = "BIP_project";
+	static final String host = "54.149.71.241";
+	static final String port = "1433";
+	static final String username = "Admin";
+	static final String password = "BIP_project";
+	static final String database = "BIP_project";
 	
 	static Connection conn;
+	
+	public static void main(String[] args) {
+		connect("Bond_DW");
+	}
 	
 	public static void connect() {
 		connect(database);
@@ -32,6 +36,19 @@ public class DBConnector {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Connection connectWithCatelog(String database, String catelog) {
+		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			conn = DriverManager.getConnection("jdbc:mondrian:Jdbc=jdbc:sqlserver://" + host + ":" + port + ";jdbc.databaseName=" + database + ";Catalog=" + catelog + ";JdbcDrivers=com.microsoft.sqlserver.jdbc.SQLServerDriver;JdbcUser=" + username + ";JdbcPassword=" + password);
+			System.out.println("DB connect success");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return conn;
 	}
 	
 	public static ResultSet query(String sql) {
