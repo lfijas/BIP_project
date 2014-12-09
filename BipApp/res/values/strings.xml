@@ -41,5 +41,6 @@
     <string name="previous_purchases">Previous purchases</string>
     <string name="error">An error occured! Try to log in again</string>
     <string name="title_activity_purchase_summary">Purchase Summary</string>
+    <string name="title_activity_custom_category">CustomCategoryActivity</string>
 
 </resources>

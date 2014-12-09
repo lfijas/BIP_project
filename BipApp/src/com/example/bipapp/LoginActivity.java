@@ -130,14 +130,23 @@ public class LoginActivity extends Activity {
 		        Statement statement = conn.createStatement();
 		        ResultSet resultSet = statement.executeQuery("SELECT user_id FROM [User]" +
 		        		" WHERE username = '" + user + "' and password = '" + pass + "'");
-		 
 
 				try {
 					if (resultSet != null && resultSet.next()) {
 						SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
 						SharedPreferences.Editor editor = settings.edit();
+						int userId = resultSet.getInt("user_id");
 						editor.putInt("user_id", resultSet.getInt("user_id"));
 						editor.putString("username", user);
+
+						ResultSet resultSet2 = statement.executeQuery("SELECT custom_category_name FROM CustomCategory" +
+				        		" WHERE user_Id = " + userId);
+						int numberOfCustomCategories = 0;
+						while (resultSet2 != null && resultSet2.next()) {
+							editor.putString("customCat_" + numberOfCustomCategories, resultSet2.getString("custom_category_name"));
+							numberOfCustomCategories++;
+						}
+						editor.putInt("numberOfCustomCat", numberOfCustomCategories);
 						editor.commit();
 						result = "1";
 					}
