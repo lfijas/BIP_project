@@ -124,7 +124,7 @@ public class LoginActivity extends Activity {
 		        Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
 		        String username = "Admin";
 		        String password = "BIP_project";
-		        conn = DriverManager.getConnection("jdbc:jtds:sqlserver://54.69.68.63:1433/BIP_project;user=" + username + ";password=" + password);
+		        conn = DriverManager.getConnection("jdbc:jtds:sqlserver://" + Utils.serverIp + ":1433/BIP_project;user=" + username + ";password=" + password);
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
