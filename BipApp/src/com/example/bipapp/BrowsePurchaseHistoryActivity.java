@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	private TextView greetingTextView;
 
 	private OnItemClickListener mItemClickListener = null;
+	
+	private Button mViewPurchaseHistorySummaryButton;
 	
 	
 	public final static String EXTRA_MESSAGE = "com.example.bipapp.purchaseId";
@@ -58,7 +61,17 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 				}
 			};
 		}
-				
+	
+		mViewPurchaseHistorySummaryButton = (Button) findViewById(R.id.view_purchase_history_button);
+		mViewPurchaseHistorySummaryButton.setOnClickListener(new View.OnClickListener()  {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(BrowsePurchaseHistoryActivity.this, SummaryActivity.class);
+				startActivity(intent);
+			}
+		});
+		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String user_id = Integer.toString(settings.getInt("user_id", -1));
 		String user = settings.getString("username", "");
