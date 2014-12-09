@@ -32,7 +32,8 @@ import android.widget.AdapterView.OnItemClickListener;
 public class PurchaseSummaryActivity extends Activity {
 
 	private ListView purchaseSummaryListView;
-	private ArrayAdapter<Product> arrayAdapter;
+	private PurchaseSummaryListAdapter purchaseSummaryListAdapter;
+	//private ArrayAdapter<Product> arrayAdapter;
 	private ArrayList<Product> mProductList;
 
 	private OnItemClickListener mItemClickListener = null;
@@ -55,7 +56,7 @@ public class PurchaseSummaryActivity extends Activity {
 						int arg2, long arg3) {
 					
 					Intent intent = new Intent(PurchaseSummaryActivity.this, NutritionInfoActivity.class);
-					String productBarcode = arrayAdapter.getItem(arg2).getBarcode();
+					String productBarcode = ((Product) purchaseSummaryListAdapter.getItem(arg2)).getBarcode();
 					intent.putExtra(EXTRA_MESSAGE, productBarcode);
 					startActivity(intent);
 				}
@@ -64,19 +65,9 @@ public class PurchaseSummaryActivity extends Activity {
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("purchase_products")) {
 			mProductList = savedInstanceState.getParcelableArrayList("purchase_products");
-			arrayAdapter = new ArrayAdapter<Product>(this, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
-				@Override
-				public View getView(int position, View convertView, ViewGroup parent) {
-			        View view = super.getView(position, convertView, parent);
-			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-			        text1.setText(mProductList.get(position).getName());
-			        text2.setText(mProductList.get(position).getQuantityPrice());
-			        return view;
-			      }
-			    };
+			purchaseSummaryListAdapter = new PurchaseSummaryListAdapter(this, mProductList);
 			purchaseSummaryListView = (ListView) findViewById(R.id.purchase_summary_list_view);
-			purchaseSummaryListView.setAdapter(arrayAdapter);
+			purchaseSummaryListView.setAdapter(purchaseSummaryListAdapter);
 			purchaseSummaryListView.setOnItemClickListener(mItemClickListener);
 		}
 		else {
@@ -127,18 +118,8 @@ public class PurchaseSummaryActivity extends Activity {
 		@Override
 		protected void onPostExecute(ArrayList<Product> result) {
 			mProductList = result;
-			arrayAdapter = new ArrayAdapter<Product>(mContext, android.R.layout.simple_list_item_2, android.R.id.text1, mProductList){
-				@Override
-				public View getView(int position, View convertView, ViewGroup parent) {
-			        View view = super.getView(position, convertView, parent);
-			        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-			        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-			        text1.setText(mProductList.get(position).getName());
-			        text2.setText(mProductList.get(position).getQuantityPrice());
-			        return view;
-			      }
-			    };
-			purchaseSummaryListView.setAdapter(arrayAdapter);
+			purchaseSummaryListAdapter = new PurchaseSummaryListAdapter(mContext, mProductList);
+			purchaseSummaryListView.setAdapter(purchaseSummaryListAdapter);
 			purchaseSummaryListView.setOnItemClickListener(mItemClickListener);
 		}
 		
