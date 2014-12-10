@@ -44,5 +44,6 @@
     <string name="title_activity_custom_category">CustomCategoryActivity</string>
     <string name="view_summary">View Summary</string>
     <string name="title_activity_summary">SummaryActivity</string>
+    <string name="filter">Filter</string>
 
 </resources>

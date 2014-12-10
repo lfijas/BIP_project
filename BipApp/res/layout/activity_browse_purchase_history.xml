@@ -9,12 +9,13 @@
     android:orientation="vertical"
     tools:context=".BrowsePurchaseHistoryActivity" >
 
-    <TextView 
-	    android:id="@+id/greeting_text_purchase"
+     <TextView 
+	   	android:id="@+id/greeting_text_purchase"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginBottom="10dp"
-	    android:gravity="right"/>
+		android:gravity="right"/>
+        
     
     <TextView
         android:id="@+id/previous_purchases_text"

@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +43,6 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	private OnItemClickListener mItemClickListener = null;
 	
 	private Button mViewPurchaseHistorySummaryButton;
-	
 	
 	public final static String EXTRA_MESSAGE = "com.example.bipapp.purchaseId";
 	
@@ -61,7 +65,33 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 				}
 			};
 		}
-	
+		
+		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.fliters, android.R.layout.simple_spinner_dropdown_item);
+		OnNavigationListener callback = new OnNavigationListener() {
+			
+			String[] items = getResources().getStringArray(R.array.fliters);
+			
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+				DialogFragment datePicker;
+				switch(itemPosition) {
+					case 0:
+						datePicker = DatePickerFragment.newInstance(0);
+						datePicker.show(getFragmentManager(), "minDatePicker");
+						break;
+					case 1:
+						datePicker = DatePickerFragment.newInstance(1);
+						datePicker.show(getFragmentManager(), "maxDatePicker");
+						break;
+				}
+				return false;
+			}
+		};
+		ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setListNavigationCallbacks(spinnerAdapter, callback);
+		
 		mViewPurchaseHistorySummaryButton = (Button) findViewById(R.id.view_purchase_history_button);
 		mViewPurchaseHistorySummaryButton.setOnClickListener(new View.OnClickListener()  {
 			
