@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -77,7 +78,7 @@ public class NutritionalDataSummary extends HttpServlet {
 				productList.put(barcodes[i], amount + Integer.parseInt(amounts[i]));
 			}
 			System.out.println(productList.toString());
-			ArrayList<Product> products = Product.getProductsByMultipleBarcodes(productList.keySet().toArray(new String[productList.keySet().size()]));
+			List<Product> products = Product.getProductsByMultipleBarcodes(productList.keySet().toArray(new String[productList.keySet().size()]));
 			//Product summary = Product.getNutritionalSummary(barcodes);
 			
 			String output = "";
