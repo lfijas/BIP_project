@@ -48,6 +48,14 @@
             android:name="com.example.bipapp.PurchaseSummaryActivity"
             android:label="@string/title_activity_purchase_summary" >
         </activity>
+        <activity
+            android:name="com.example.bipapp.CustomCategoryActivity"
+            android:label="@string/title_activity_custom_category" >
+        </activity>
+        <activity
+            android:name="com.example.bipapp.SummaryActivity"
+            android:label="@string/title_activity_summary" >
+        </activity>
     </application>
 
 </manifest>

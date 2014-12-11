@@ -35,6 +35,7 @@ public class PurchaseSummaryActivity extends Activity {
 	private PurchaseSummaryListAdapter purchaseSummaryListAdapter;
 	//private ArrayAdapter<Product> arrayAdapter;
 	private ArrayList<Product> mProductList;
+	private Button mViewSummaryButton;
 
 	private OnItemClickListener mItemClickListener = null;
 	
@@ -47,6 +48,7 @@ public class PurchaseSummaryActivity extends Activity {
 		setContentView(R.layout.activity_purchase_summary);
 		
 		purchaseSummaryListView = (ListView) findViewById(R.id.purchase_summary_list_view);
+		mViewSummaryButton = (Button) findViewById(R.id.view_purchase_summary_button);
 		
 		if (mItemClickListener == null) {
 			mItemClickListener = new OnItemClickListener() {
@@ -62,6 +64,15 @@ public class PurchaseSummaryActivity extends Activity {
 				}
 			};
 		}
+		
+		mViewSummaryButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(PurchaseSummaryActivity.this, SummaryActivity.class);
+				startActivity(intent);
+			}
+		});
 		
 		if (savedInstanceState != null && savedInstanceState.containsKey("purchase_products")) {
 			mProductList = savedInstanceState.getParcelableArrayList("purchase_products");

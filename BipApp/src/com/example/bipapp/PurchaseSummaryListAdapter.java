@@ -2,23 +2,23 @@ package com.example.bipapp;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class PurchaseSummaryListAdapter extends BaseAdapter {
 
 	private ArrayList<Product> listData;
 	private LayoutInflater layoutInflater;
+	private Context mContext;
 	
 	public PurchaseSummaryListAdapter(Context context, ArrayList<Product> listData) {
+		mContext = context;
 		this.listData = listData;
 		layoutInflater = LayoutInflater.from(context);
 	}
@@ -58,7 +58,8 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				Log.i("lukasz", "lukasz");
+				CustomCategoryDialogFragment dialog = new CustomCategoryDialogFragment();
+				dialog.show(((Activity) mContext).getFragmentManager(), "dialog");
 			}
 		});
 		
