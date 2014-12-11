@@ -76,10 +76,12 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 				DialogFragment datePicker;
 				switch(itemPosition) {
 					case 0:
+						break;
+					case 1:
 						datePicker = DatePickerFragment.newInstance(0);
 						datePicker.show(getFragmentManager(), "minDatePicker");
 						break;
-					case 1:
+					case 2:
 						datePicker = DatePickerFragment.newInstance(1);
 						datePicker.show(getFragmentManager(), "maxDatePicker");
 						break;
