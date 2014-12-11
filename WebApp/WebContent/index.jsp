@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
 <%@ page import="Model.Product" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,7 +13,8 @@
 </head>
 <body>
 	<form id="getNutrition" action="/Nutrition/RetrieveNutritionalData" method="get">
-		product barcode: <input type="digits" name="barcode" required />
+		<div>userID: <input type="digits" name="userID" /></div>
+		<div>product barcode: <input type="digits" name="barcode" required /></div>
 		<input type="submit" value="Submit">
 		<input type="button" value="Add product" onclick="window.location.replace('addNewProduct.jsp');">
 	</form>
@@ -22,6 +25,14 @@
 					out.print("<table><tr><td>Product Name:</td><td>" + product.getName() + "</td></tr>");
 					out.print("<tr><td>Brand Name:</td><td>" + product.getBrand() + "</td></tr>");
 					out.print("<tr><td>Food Group:</td><td>" + product.getFoodGroup() + "</td></tr>");
+					if (request.getAttribute("customCats") != null && ((ArrayList<String>)request.getAttribute("customCats")).size() > 0) {
+						List<String> customCats = (ArrayList<String>)request.getAttribute("customCats");
+						String s = customCats.get(0);
+						for (int i = 1; i < customCats.size(); i++) {
+							s += ", " + customCats.get(i);
+						}
+						out.print("<tr><td>Custom Categories:</td><td>" + s + "</td></tr>");
+					}
 					if (product.getSize() >= 0) {
 						out.print("<tr><td>Quantity:</td><td>" + product.getSize() + " " + product.getUnitSize() + "</td></tr>");
 					}

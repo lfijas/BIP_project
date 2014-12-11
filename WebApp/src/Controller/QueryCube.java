@@ -103,7 +103,7 @@ public class QueryCube {
 			document.open();
 			
 			// Retrieve graph for nutrition summary (pass Summary object as a parameter)
-			JFreeChart chart = generateNutritionChart(sumList4.get(0));
+			JFreeChart chart = generateNutritionChart(sumList.get(0));
 			
 			PdfContentByte pdfContentByte = writer.getDirectContent();
 	    	PdfTemplate pdfTemplateChartHolder = pdfContentByte.createTemplate(500, 200);

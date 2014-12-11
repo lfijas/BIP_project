@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
@@ -208,7 +209,27 @@ public class Product {
 		return product;
 	}
 	
-	public static ArrayList<Product> getProductsByMultipleBarcodes(String[] barcodes)
+	public static List<String> GetProductCustomCategory(String barcode, String userid)
+	{	
+		List<String> customCats = new ArrayList<>();
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT custom_category_name from CustomCategory c, Product_CustomCategory pc WHERE barcode = " + barcode + " and user_id = " + userid + " and c.custom_cat_id = pc.custom_cat_id");
+		
+		try {
+			while (result.next()) {
+				customCats.add(result.getString("custom_category_name"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return customCats;
+	}
+	
+	public static List<Product> getProductsByMultipleBarcodes(String[] barcodes)
 	{	
 		ArrayList<Product> productList = new ArrayList<Product>();
 		DBConnector.connect();

@@ -2,6 +2,7 @@ package Controller;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +28,12 @@ public class RetrieveNutritionalData extends HttpServlet {
 			String barcode = request.getParameter("barcode");
 			if (request.getParameter("check") == null) {
 				Product product = getProductInfo(barcode);
+				List<String> customCats = null;
+				if (request.getParameter("userID").length() > 0) {
+					customCats = Product.GetProductCustomCategory(barcode, request.getParameter("userID"));
+				}
 				request.setAttribute("data", product);
+				request.setAttribute("customCats", customCats);
 				getServletConfig().getServletContext()
 						.getRequestDispatcher("/index.jsp")
 						.forward(request, response);
