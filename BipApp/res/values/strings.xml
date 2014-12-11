@@ -45,5 +45,11 @@
     <string name="view_summary">View Summary</string>
     <string name="title_activity_summary">SummaryActivity</string>
     <string name="filter">Filter</string>
+    <string name="title_activity_add_category">AddCategoryActivity</string>
+    <string name="add_custom_category">Add custom category</string>
+    <string name="add_category_hint">Name of your custom category</string>
+    <string name="add">Add</string>
+    <string name="empty_category">New category cannot be empty</string>
+    <string name="category_add">New category has been added</string>
 
 </resources>
