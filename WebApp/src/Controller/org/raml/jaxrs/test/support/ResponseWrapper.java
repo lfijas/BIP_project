@@ -1,5 +1,5 @@
 
-package Controller.restapi.support;
+package Controller.org.raml.jaxrs.test.support;
 
 import java.util.List;
 import java.util.Map;

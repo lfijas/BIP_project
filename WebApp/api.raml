@@ -1,0 +1,676 @@
+#%RAML 0.8
+title: BOND API
+baseUri: http://54.149.71.241/api/{version}
+version: 1.0
+/products:
+  description: Collection containing list of all products sold in a supermarket
+  get:
+    description: Retrieves barcodes of all products
+    responses: 
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "data": {
+                  "_links": {
+                    "self": {
+                      "href":"/products"
+                    },
+                    "curies": [
+                      {
+                        "name": "np",
+                        "href": "http://54.149.71.241/api/products/{rel}",
+                        "templated": true
+                      }                    
+                    ],
+                    "np:product": [
+                      {
+                        "href": "/products/20000233",
+                        "title": "20000233"
+                      },
+                      {
+                        "href": "/products/20006006",
+                        "title": "20006006"
+                      }
+                    ]
+                  }
+                },
+                "success": true,
+                "status": 200
+              }
+  post:
+    description: Creates a new product
+    queryParameters:
+      barcode:
+        displayName: Barcode
+        type: number
+        description: Product barcode
+        example: 20000233
+        required: true
+      name:
+        displayName: Product Name
+        type: string
+        description: Name of a product
+        example: "Soja Nature"
+        required: true
+      foodGroupId:
+        displayName: Food group id
+        type: number
+        description: Id of a food group, which a product is assigned to
+        example: 6
+        required: false
+      price:
+        displayName: Product price
+        type: number
+        description: Price of a product
+        example: 5.60
+        required: false
+    responses: 
+      200:
+        body:
+          application/json:
+            example: |
+              {
+              "success": true,
+              "status": 200
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+              "success": false,
+              "status": 400
+              }
+  /{barcode}:
+      get:
+        description: Retrieves details of a product
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                    "data":
+                      {
+                      "barcode": 20000233,
+                      "food_group_id": 6,
+                      "product_name": "Grana Padano",
+                      "price": 3.16,
+                      "quantity_number": 100,
+                      "unit": "gr",
+                      "serving_size": null,
+                      "calories": 567 , 
+                      "proteins": 4.5,
+                      "carbohydrates": 23,
+                      "sugar": 2.3,
+                      "fat": null,
+                      "saturated_fat": null,
+                      "fiber": 0.9,
+                      "cholesterol": 2.4,
+                      "sodium": 0.04,
+                      "calcium": 0.56,
+                      "iron": null,
+                      "vitamin_a": null,
+                      "vitamin_c": null
+                      },
+                    "success": true,
+                    "status": 200
+                  }
+          
+          400:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": false,
+                  "status": 400
+                  }
+      put:
+        description: Updates a product
+        queryParameters:
+          name:
+            displayName: Product Name
+            type: string
+            description: Name of a product
+            example: "Soja Nature"
+            required: false
+          foodGroupId:
+            displayName: Food group id
+            type: number
+            description: Id of a food group, which a product is assigned to
+            example: 6
+            required: false
+          price:
+            displayName: Product price
+            type: number
+            description: Price of a product
+            example: 5.60
+            required: false
+        responses:  
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": true,
+                  "status": 200
+                  }
+          400:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": false,
+                  "status": 400
+                  }
+/users:
+  description: Collection containing list of supermarket customers
+  post:
+    description: Creates a new user
+    queryParameters:
+      username:
+        displayName: Username
+        type: string
+        description: Username assigned to a customer of a sumermarket
+        example: "lukasz"
+        minLength: 3
+        maxLength: 10
+        required: true
+      password:
+        displayName: Password
+        type: string
+        description: Secret customer's password
+        example: "admin1234"
+        minLength: 5
+        maxLength: 50
+        required: true
+      sex:
+        displayName: Sex
+        type: string
+        description: Sex of a customer
+        enum: ["M", "F"]
+        required: false
+      age:
+        displayName: Age
+        type: number
+        description: Age of a customer
+        example: 34
+        required: false
+      email:
+        displayName: Email
+        type: string
+        description: Email of a customer
+        example: "john@smith.com"
+        required: false
+      address:
+        displayName: Address
+        type: string
+        description: Address of a customer
+        example: "Mejia Lequerica 26"
+        required: false 
+      city:
+        displayName: City
+        type: string
+        description: City where customer lives
+        example: "Barcelona"
+        required: false
+      country:
+        displayName: Country
+        type: string
+        description: Country where customer lives
+        example: "Spain"
+        required: false
+      birthdate:
+        displayName: Birth date
+        type: date
+        description: Customer's birth date
+        example: "1991-12-23"
+        required: false 
+      phone:
+        displayName: Phone number
+        type: string
+        description: Customer's phone number
+        example: "604788987"
+        required: false 
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+              "success": true,
+              "status": 200
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+              "success": false,
+              "status": 400
+              }
+  /{userID}:
+      get:
+        description: Retrives user information
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                    "data":
+                      {
+                      "_links": {
+                        "self": {
+                          "href":"/users/15"
+                        },
+                        "curies": [
+                          {
+                            "name": "nu",
+                            "href": "http://54.149.71.241/api/users/{rel}",
+                            "templated": true
+                          }                    
+                        ],
+                        "nu:password": [
+                          {
+                            "href": "/users/15/password"
+                          }
+                        ],
+                        "nu:purchases": [
+                          {
+                            "href": "/users/15/purchases"
+                          }
+                        ],
+                      },
+                      "username": "lukasz",
+                      "email": "john@smith.com",
+                      "phone":"608567890",
+                      "address": "Mejia Lequerica 26",
+                      "city": "Barcelona",
+                      "country": "Spain",
+                      "birthdate": "1990-12-23",
+                      "sex": "M"
+                      },
+                    "success": true,
+                    "status": 200
+                  }
+          400:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": false,
+                  "status": 400
+                  }
+      delete:
+        description: Removes a user
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": true,
+                  "status": 200
+                  }
+          400:
+            body:
+              application/json:
+                example: |
+                  {
+                  "success": false,
+                  "status": 400
+                  }
+      /password:
+        put:
+          description: Changes user password
+          queryParameters:
+            pass:
+              displayName: Password
+              type: string
+              description: Secret customer's password
+              example: "admin1234"
+              minLength: 5
+              maxLength: 50
+              required: true
+          responses:
+            200:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "success": true,
+                    "status": 200
+                    }
+            400:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "success": false,
+                    "status": 400
+                    }
+      /purchases:
+        post:
+          description: Creates a new user purchase
+          queryParameters:
+            barcodes[]:
+              displayName: Barcodes
+              type: number
+              description: Array of barcodes of products associated with a purchase
+              example: 20000233
+              required: true
+          responses:
+            200:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "success": true,
+                    "status": 200
+                    }
+            400:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "success": false,
+                    "status": 400
+                    }
+        get:
+          description: Retrieves all purchases done by the user
+          responses: 
+            200:
+              body:
+                application/json:
+                  example: |
+                    {
+                      "data": 
+                      {
+                        "_links": 
+                        {
+                          "self": 
+                          {
+                            "href":"/users/15/purchases"
+                          },
+                          "curies": [
+                            {
+                              "name": "nu",
+                              "href": "http://54.149.71.241/api/users/{rel}",
+                              "templated": true
+                            }                    
+                          ],
+                          "nu:products": [
+                            {
+                              "href": "/users/15/purchases/1/products"
+                            },
+                            {
+                              "href": "/users/15/purchases/2/products"
+                            }
+                          ],
+                          "nu:date": [
+                            {
+                              "href": "/users/15/purchases/date/2014-11-17"
+                            }
+                          ]
+                        },
+                        "_embedded": {
+                          "nu:purchase":[
+                            {
+                            "_links": {
+                              "self": {
+                                "href": "/users/15/purchases/1"
+                              }
+                            },
+                            "date": "2014-11-17 18:47:00.000",
+                            "branch": "Les Corts Branch",
+                            "branch_district": "Les Corts",
+                            "branch_city": "Barcelona",
+                            "branch_country": "Spain"
+                            },
+                            {
+                            "_links": {
+                              "self": {
+                                "href": "/users/15/purchases/2"
+                              }
+                            },
+                            "date": "2014-11-18 19:17:00.000",
+                            "branch": "Central Branch",
+                            "branch_district": "Placa Catalunya",
+                            "branch_city": "Barcelona",
+                            "branch_country": "Spain"
+                            }
+                          ]
+                        }
+                      },
+                      "success": true,
+                      "status": 200
+                    }
+            400:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "success": false,
+                    "status": 400
+                    }  
+        /{purchaseID}/products:
+          get:
+            description: Retrieves all products in a purchase
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: |
+                      {
+                        "data": [
+                          {
+                          "barcode": 20000233,
+                          "food_group_id": 6,
+                          "product_name": "Grana Padano",
+                          "price": 3.16,
+                          "quantity_number": 100,
+                          "unit": "gr",
+                          "serving_size": null,
+                          "calories": 567 , 
+                          "proteins": 4.5,
+                          "carbohydrates": 23,
+                          "sugar": 2.3,
+                          "fat": null,
+                          "saturated_fat": null,
+                          "fiber": 0.9,
+                          "cholesterol": 2.4,
+                          "sodium": 0.04,
+                          "calcium": 0.56,
+                          "iron": null,
+                          "vitamin_a": null,
+                          "vitamin_c": null
+                          },
+                          {
+                          "barcode": 20000456,
+                          "food_group_id": 3,
+                          "product_name": "Soja Nature",
+                          "price": 34.12,
+                          "quantity_number": 500,
+                          "unit": "gr",
+                          "serving_size": null,
+                          "calories": 867 , 
+                          "proteins": 56,
+                          "carbohydrates": 123,
+                          "sugar": 4.6,
+                          "fat": 12.34,
+                          "saturated_fat": 9.8,
+                          "fiber": 0.5,
+                          "cholesterol": 0,
+                          "sodium": 0.23,
+                          "calcium": 5.78,
+                          "iron": null,
+                          "vitamin_a": 0,
+                          "vitamin_c": 0
+                          }
+                        ],
+                        "success": true,
+                        "status": 200
+                      }
+              400:
+                body:
+                  application/json:
+                    example: |
+                      {
+                      "success": false,
+                      "status": 400
+                      }
+        /date/{date}:
+          get:
+            description: Retrieves purchases done by a user on a specific data
+            responses:
+              200:
+                body:
+                  application/json:
+                    example: |
+                      {
+                        "data": 
+                      {
+                        "_links": 
+                        {
+                          "self": 
+                          {
+                            "href":"/users/15/purchases/dates/2014-11-17"
+                          },
+                          "curies": [
+                            {
+                              "name": "nu",
+                              "href": "http://54.149.71.241/api/users/{rel}",
+                              "templated": true
+                            }                    
+                          ],
+                          "nu:products": [
+                            {
+                              "href": "/users/15/purchases/1/products"
+                            }
+                          ]
+                        },
+                        "_embedded": {
+                          "nu:purchase":[
+                            {
+                            "_links": {
+                              "self": {
+                                "href": "/users/15/purchases/1"
+                              }
+                            },
+                            "date": "2014-11-17 18:47:00.000",
+                            "branch": "Les Corts Branch",
+                            "branch_district": "Les Corts",
+                            "branch_city": "Barcelona",
+                            "branch_country": "Spain"
+                            }
+                          ]
+                        }
+                      },
+                        "success": true,
+                        "status": 200
+                      }
+              400:
+                body:
+                  application/json:
+                    example: |
+                      {
+                      "success": false,
+                      "status": 400
+                      }            
+/foodgroups:
+  description: Colection containing list of food groups
+  post:
+    description: Creates a new food group
+    queryParameters:
+      name:
+        displayName: Food group
+        type: string
+        description: Name of a new food group
+        example: "Fruit"
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+              "success": true,
+              "status": 200
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+              "success": false,
+              "status": 400
+              }
+  /{name}/products:
+    get:
+      description: Retrieves products assigned to a food group
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "data": [
+                    {
+                    "barcode": 20000233,
+                    "food_group_id": 6,
+                    "product_name": "Grana Padano",
+                    "price": 3.16,
+                    "quantity_number": 100,
+                    "unit": "gr",
+                    "serving_size": null,
+                    "calories": 567 , 
+                    "proteins": 4.5,
+                    "carbohydrates": 23,
+                    "sugar": 2.3,
+                    "fat": null,
+                    "saturated_fat": null,
+                    "fiber": 0.9,
+                    "cholesterol": 2.4,
+                    "sodium": 0.04,
+                    "calcium": 0.56,
+                    "iron": null,
+                    "vitamin_a": null,
+                    "vitamin_c": null
+                    },
+                    {
+                    "barcode": 20000456,
+                    "food_group_id": 3,
+                    "product_name": "Soja Nature",
+                    "price": 34.12,
+                    "quantity_number": 500,
+                    "unit": "gr",
+                    "serving_size": null,
+                    "calories": 867 , 
+                    "proteins": 56,
+                    "carbohydrates": 123,
+                    "sugar": 4.6,
+                    "fat": 12.34,
+                    "saturated_fat": 9.8,
+                    "fiber": 0.5,
+                    "cholesterol": 0,
+                    "sodium": 0.23,
+                    "calcium": 5.78,
+                    "iron": null,
+                    "vitamin_a": 0,
+                    "vitamin_c": 0
+                    }
+                  ],
+                  "success": true,
+                  "status": 200
+                }
+        400:
+          body:
+            application/json:
+              example: |
+                {
+                "success": false,
+                "status": 400
+                }

@@ -1,5 +1,5 @@
 
-package Controller.restapi.resource;
+package Controller.org.raml.jaxrs.test.resource;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
@@ -67,7 +67,7 @@ public interface Foodgroups {
     ;
 
     public class GetFoodgroupsByNameProductsResponse
-        extends Controller.restapi.support.ResponseWrapper
+        extends Controller.org.raml.jaxrs.test.support.ResponseWrapper
     {
 
 
@@ -346,7 +346,7 @@ public interface Foodgroups {
     }
 
     public class PostFoodgroupsResponse
-        extends Controller.restapi.support.ResponseWrapper
+        extends Controller.org.raml.jaxrs.test.support.ResponseWrapper
     {
 
 
