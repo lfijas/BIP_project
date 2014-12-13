@@ -7,10 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.springframework.hateoas.ResourceSupport;
+
 import model.DBConnector;
 
 
-public class User {
+public class User extends ResourceSupport{
 	private String username;
 	private String password;
 	private Sex sex;
