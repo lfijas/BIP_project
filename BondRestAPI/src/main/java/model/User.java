@@ -16,7 +16,7 @@ import model.DBConnector;
 import model.HALResource;
 
 
-public class User extends HALResource{
+public class User extends ResourceSupport{
 	private String username;
 	private String password;
 	private Sex sex;
@@ -138,13 +138,14 @@ public class User extends HALResource{
 	}
 	
 	public static User getUserInfo(int userID) {
-		User user = new User();
+		User user = null;
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT * from [BIP_project].[dbo].[User] WHERE user_id = '" + userID + "'");
 		
 		try {
 			if (result != null && result.next()) {
+				user = new User();
 				user.username = result.getString("username");
 				user.sex = result.getString("gender") == "F" ? Sex.F : Sex.M ;
 				user.email = result.getString("email");
@@ -170,5 +171,21 @@ public class User extends HALResource{
 		return status;
 	}
 	
+	public static boolean isUserIDExist (int id) {
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT user_id from [BIP_project].[dbo].[User] WHERE user_id = '" + id + "'");
+		
+		try {
+			if (result != null && result.next()) {
+				return true;	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return false;
+	}
 
 }

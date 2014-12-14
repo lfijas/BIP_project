@@ -4,10 +4,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import model.MainData;
 import model.EmptyObject;
 import model.User;
 import model.PurchaseHistory;
 import model.Product;
+import model.CollectionList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import org.springframework.http.HttpEntity;
@@ -30,83 +32,132 @@ public class UserController {
 
     @RequestMapping("/users/{userID}")
     @ResponseBody
-    public HttpEntity<User> user(@PathVariable int userID) {
-        User user = User.getUserInfo(userID);
-        user.add(linkTo(methodOn(UserController.class).user(userID)).withSelfRel());
-        //Method method = UserController.class.getMethod("purchases", Long.class);
-        user.add(new Link("http://localhost:8080/users/" + userID + "/password", "purchases"));
-        user.add(new Link("http://localhost:8080/users/" + userID + "/purchases", "purchases"));
+    public HttpEntity<MainData> user(@PathVariable int userID) {
+    	MainData main = new MainData();
+    	HttpStatus status;
         
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    	User user = User.getUserInfo(userID);
+        if (user != null) {
+	        user.add(linkTo(methodOn(UserController.class).user(userID)).withSelfRel());
+	        user.add(new Link("/users/" + userID + "/password", "password"));
+	        user.add(new Link("/users/" + userID + "/purchases", "purchases"));
+	        
+	        main.setData(user);
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
+        } else {
+        	main.setData(null);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        
+	        status = HttpStatus.BAD_REQUEST;
+        }
+        
+        return new ResponseEntity<MainData>(main, status);
     }
     
     @RequestMapping("/users/{userID}/purchases")
     @ResponseBody
-    public HttpEntity<EmptyObject> purchases(@PathVariable int userID) {
+    public HttpEntity<MainData> purchases(@PathVariable int userID) {
+    	MainData main = new MainData();
+    	HttpStatus status;
+        
     	EmptyObject ob = new EmptyObject();
-    	ob.add(linkTo(methodOn(UserController.class).purchases(userID)).withSelfRel());
-        List<PurchaseHistory> purchases = PurchaseHistory.getPurchasesForUser(userID);
-        for (PurchaseHistory purchase : purchases) {
-        	ob.add(new Link("http://localhost:8080/users/" + userID + "/purchases/" + purchase.getPurchaseID() + "/products", "products"));
-        	ob.add(new Link("http://localhost:8080/users/" + userID + "/purchases/date/" + purchase.getDate(), "date"));
-        	purchase.add(linkTo(methodOn(UserController.class).purchases(userID)).slash(purchase.getPurchaseID()).withSelfRel());
+    	List<PurchaseHistory> purchases = PurchaseHistory.getPurchasesForUser(userID);
+        if (purchases != null) {
+        	ob.add(linkTo(methodOn(UserController.class).purchases(userID)).withSelfRel());
+            for (PurchaseHistory purchase : purchases) {
+            	ob.add(new Link("/users/" + userID + "/purchases/" + purchase.getPurchaseID() + "/products", "products"));
+            	ob.add(new Link("/users/" + userID + "/purchases/date/" + purchase.getDate(), "date"));
+            	purchase.add(linkTo(methodOn(UserController.class).purchases(userID)).slash(purchase.getPurchaseID()).withSelfRel());
+            }
+            ob.embedResource("purchases", purchases);
+	        
+	        main.setData(ob);
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
+        } else {
+        	main.setData(null);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        
+	        status = HttpStatus.BAD_REQUEST;
         }
-        ob.embedResource("purchases", purchases);
         
-        
-        return new ResponseEntity<EmptyObject>(ob, HttpStatus.OK);
+        return new ResponseEntity<MainData>(main, status);
     }
     
     @RequestMapping(value="/users", method=RequestMethod.POST)
     @ResponseBody
-    public HttpEntity<User> createUser(User user) {
-    	int status = user.register();
-    	if (status != 0) {
-            return new ResponseEntity<User>(user, HttpStatus.OK);
+    public HttpEntity<MainData> createUser(User user) {
+    	MainData main = new MainData();
+    	HttpStatus status;
+    	if (user.register() != 0) {
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
     	} else {
-    		return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        status = HttpStatus.BAD_REQUEST;
     	}
+    	return new ResponseEntity<MainData>(main, status);
     }
     
     @RequestMapping(value="/users/{userID}", method=RequestMethod.DELETE)
     @ResponseBody
-    public HttpEntity<EmptyObject> deleteUser(@PathVariable int userID) {
-    	int status = User.deleteUser(userID);
-    	EmptyObject ob = new EmptyObject();
-    	if (status != 0) {
-            return new ResponseEntity<EmptyObject>(ob, HttpStatus.OK);
+    public HttpEntity<MainData> deleteUser(@PathVariable int userID) {
+    	MainData main = new MainData();
+    	HttpStatus status;
+    	if (User.deleteUser(userID) != 0) {
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
     	} else {
-    		return new ResponseEntity<EmptyObject>(ob, HttpStatus.BAD_REQUEST);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        status = HttpStatus.BAD_REQUEST;
     	}
+    	return new ResponseEntity<MainData>(main, status);
     }
     
     @RequestMapping(value="/users/{userID}/password", method=RequestMethod.PUT)
     @ResponseBody
-    public HttpEntity<EmptyObject> updatePassword(@PathVariable int userID, String password) {
-    	int status = User.updatePassword(userID, password);
-    	EmptyObject ob = new EmptyObject();
-    	if (status != 0) {
-            return new ResponseEntity<EmptyObject>(ob, HttpStatus.OK);
+    public HttpEntity<MainData> updatePassword(@PathVariable int userID, String password) {
+    	MainData main = new MainData();
+    	HttpStatus status;
+    	if (User.updatePassword(userID, password) != 0) {
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
     	} else {
-    		return new ResponseEntity<EmptyObject>(ob, HttpStatus.BAD_REQUEST);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        status = HttpStatus.BAD_REQUEST;
     	}
+    	return new ResponseEntity<MainData>(main, status);
     }
     
     @RequestMapping("/users/{userID}/purchases/{purchaseID}/products")
     @ResponseBody
-    public HttpEntity<List<Product>> products(@PathVariable int userID, @PathVariable int purchaseID) {
-    	//EmptyObject ob = new EmptyObject();
-    	//ob.add(linkTo(methodOn(UserController.class).products(userID)).withSelfRel());
-        List<Product> products = PurchaseHistory.getProductsForUserPurchase(purchaseID);
-        /*for (PurchaseHistory purchase : purchases) {
-        	ob.add(new Link("http://localhost:8080/users/" + userID + "/purchases/" + purchase.getPurchaseID() + "/products", "products"));
-        	ob.add(new Link("http://localhost:8080/users/" + userID + "/purchases/date/" + purchase.getDate(), "date"));
-        	purchase.add(linkTo(methodOn(UserController.class).purchases(userID)).slash(purchase.getPurchaseID()).withSelfRel());
-        }
-        ob.embedResource("purchases", purchases);*/
-        
-        
-        return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+    public HttpEntity<CollectionList> products(@PathVariable int userID, @PathVariable int purchaseID) {
+    	CollectionList main = new CollectionList();
+    	HttpStatus status;
+    	List<Product> products = PurchaseHistory.getProductsForUserPurchase(userID, purchaseID);
+    	if (products != null) {
+    		main.setData(products);
+	        main.setSuccess(true);
+	        main.setStatus(200);
+	        status = HttpStatus.OK;
+    	} else {
+    		main.setData(null);
+	        main.setSuccess(false);
+	        main.setStatus(400);
+	        status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<CollectionList>(main, status);
     }
     
 }

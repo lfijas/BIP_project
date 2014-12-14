@@ -100,6 +100,10 @@ public class PurchaseHistory extends ResourceSupport {
 
 	
 	public static List<PurchaseHistory> getPurchasesForUser(int userID) {
+		if (!User.isUserIDExist(userID)) {
+			return null;
+		}
+		
 		List<PurchaseHistory> purchases = new ArrayList<>();
 		DBConnector.connect();
 		
@@ -126,7 +130,13 @@ public class PurchaseHistory extends ResourceSupport {
 	}
 	
 	
-	public static List<Product> getProductsForUserPurchase(int purchaseID) {
+	public static List<Product> getProductsForUserPurchase(int userID, int purchaseID) {
+		if (!User.isUserIDExist(userID)) {
+			return null;
+		} else if (!isPurchaseIDExist(purchaseID)) {
+			return null;
+		}
+		
 		List<Product> products = new ArrayList<>();
 		DBConnector.connect();
 		
@@ -146,6 +156,23 @@ public class PurchaseHistory extends ResourceSupport {
 		
 		DBConnector.closeConnection();
 		return products;
+	}
+	
+	public static boolean isPurchaseIDExist (int id) {
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT purchase_id from PurchaseHistory WHERE purchase_id = '" + id + "'");
+		
+		try {
+			if (result != null && result.next()) {
+				return true;	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return false;
 	}
 	
 	

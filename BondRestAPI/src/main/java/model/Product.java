@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.DBConnector;
+import org.springframework.hateoas.ResourceSupport;
 
 
-public class Product {
+public class Product extends ResourceSupport{
 	private String barcode;
 	private String product_name;
 	private int food_group_id;
