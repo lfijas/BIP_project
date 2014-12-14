@@ -5,14 +5,18 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.hateoas.ResourceSupport;
 
 import model.DBConnector;
+import model.HALResource;
 
 
-public class User extends ResourceSupport{
+public class User extends HALResource{
 	private String username;
 	private String password;
 	private Sex sex;
@@ -35,6 +39,10 @@ public class User extends ResourceSupport{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Sex getSex() {
@@ -81,8 +89,15 @@ public class User extends ResourceSupport{
 		return birthdate;
 	}
 
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
+	public void setBirthdate(String birthdate) {
+	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); 
+	    Date startDate = null;
+	    try {
+	        startDate = df.parse(birthdate);
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+		this.birthdate = new java.sql.Date(startDate.getTime());
 	}
 
 	public String getPhone() {
@@ -107,39 +122,19 @@ public class User extends ResourceSupport{
 		this.password = password;
 	}
 	
-	public void register() {
-		try {
-			byte[] bytesOfMessage = password.getBytes("UTF-8");
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] thedigest = md.digest(bytesOfMessage);
-			StringBuffer sb = new StringBuffer();
-	        for (int i = 0; i < thedigest.length; i++) {
-	          sb.append(Integer.toString((thedigest[i] & 0xff) + 0x100, 16).substring(1));
-	        }
-	        password = sb.toString();
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+	public int register() {
 		DBConnector.connect();
-		DBConnector.update("INSERT INTO [userProfile].[dbo].[User] (username, password, name) VALUES ('" + username + "','" + password + "', '');");
+		int status = DBConnector.update("INSERT INTO [BIP_project].[dbo].[User] (username, password, gender, email, address, city, country, birthdate, phone) "
+				+ "VALUES ('" + username + "','" + password  + "','" +  sex + "','" +  email + "','" +  address + "','" +  city + "','" +  country + "','" +  birthdate + "','" +  phone + "');");
 		DBConnector.closeConnection();
+		return status;
 	}
 	
-	public static boolean isUserIDExist (String id) {
+	public static int deleteUser(int userID) {
 		DBConnector.connect();
-		
-		ResultSet result = DBConnector.query("SELECT user_id from [BIP_project].[dbo].[User] WHERE user_id = '" + id + "'");
-		
-		try {
-			if (result != null && result.next()) {
-				return true;	
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
+		int status = DBConnector.update("DELETE from [BIP_project].[dbo].[User] where user_id=" + userID);
 		DBConnector.closeConnection();
-		return false;
+		return status;
 	}
 	
 	public static User getUserInfo(int userID) {
@@ -167,5 +162,13 @@ public class User extends ResourceSupport{
 		DBConnector.closeConnection();
 		return user;
 	}
+	
+	public static int updatePassword(int userID, String password) {
+		DBConnector.connect();
+		int status = DBConnector.update("UPDATE [BIP_project].[dbo].[User] SET password='" + password + "' where user_id=" + userID);
+		DBConnector.closeConnection();
+		return status;
+	}
+	
 
 }

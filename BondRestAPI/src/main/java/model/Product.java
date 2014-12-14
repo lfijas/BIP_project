@@ -12,11 +12,12 @@ import model.DBConnector;
 
 
 public class Product {
-	private String code;
-	private String name;	
-	private double size;
-	private String unitSize;
-	private String brand;
+	private String barcode;
+	private String product_name;
+	private int food_group_id;
+	private double price;
+	private double quantity_number;
+	private String unit;
 	private double	calories;
 	private double	proteins;
 	private double	carbohydrates;
@@ -30,46 +31,53 @@ public class Product {
 	private double	vitaminC;
 	private double	calcium;	
 	private double	iron;
-	private String foodGroup;
-
-	public String getCode() {
-		return code;
+	
+	public String getBarcode() {
+		return barcode;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 
-	public String getName() {
-		return name;
+	public String getProduct_name() {
+		return product_name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
 	}
 
-	public double getSize() {
-		return size;
+	public int getFood_group_id() {
+		return food_group_id;
 	}
 
-	public void setSize(double size) {
-		this.size = size;
+	public void setFood_group_id(int food_group_id) {
+		this.food_group_id = food_group_id;
 	}
 
-	public String getUnitSize() {
-		return unitSize;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setUnitSize(String unitSize) {
-		this.unitSize = unitSize;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
-	public String getBrand() {
-		return brand;
+	public double getQuantity_number() {
+		return quantity_number;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setQuantity_number(double quantity_number) {
+		this.quantity_number = quantity_number;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public double getCalories() {
@@ -176,14 +184,6 @@ public class Product {
 		this.iron = iron;
 	}
 	
-	public String getFoodGroup() {
-		return foodGroup;
-	}
-
-	public void setFoodGroup(String foodGroup) {
-		this.foodGroup = foodGroup;
-	}
-	
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
 	
 	public static Product GetProductByBarcode(String barcode)
@@ -227,13 +227,12 @@ public class Product {
 		return customCats;
 	}
 	
-	private static void setProduct(Product product, ResultSet result) throws SQLException {
-		product.code = result.getString("barcode");
-		product.name = (String)isNull(result, "product_name", "string");
-		product.brand = (String) isNull(result, "brand_name", "string");
-		product.foodGroup = (String) isNull(result, "group_name", "string");
-		product.size = (double) isNull(result, "quantity_number", "double");
-		product.unitSize = (String) isNull(result, "unit", "string");
+	public static void setProduct(Product product, ResultSet result) throws SQLException {
+		product.barcode = result.getString("barcode");
+		product.product_name = (String)isNull(result, "product_name", "string");
+		product.food_group_id = result.getInt("group_id");
+		product.quantity_number = (double) isNull(result, "quantity_number", "double");
+		product.unit = (String) isNull(result, "unit", "string");
 		product.calories = (double) isNull(result, "calories", "double");
 		product.proteins = (double) isNull(result, "proteins_100", "double");
 		product.carbohydrates = (double) isNull(result, "carbohydrates_100", "double");
@@ -249,22 +248,6 @@ public class Product {
 		product.iron = (double) isNull(result, "iron_100", "double");
 	}
 	
-	public static int addProduct(Product product) {
-		int foodGroup = FoodGroup.getFoodGroupId(product.foodGroup);
-		DBConnector.connect();
-		String query = "INSERT INTO Product (barcode, product_name, group_id, quantity_number, unit, calories, proteins_100, carbohydrates_100, "
-				+ "sugar_100, fat_100, saturated_fat_100, cholesterol_100, fiber_100, sodium_100, vitamin_a, vitamin_c, calcium_100, iron_100"
-				+ ") VALUES (" + product.code + ",'" + product.name + "'," + foodGroup + "," + checkIfNumberIsNull(product.size) + "," + product.unitSize + "," + checkIfNumberIsNull(product.calories)
-				+ "," + checkIfNumberIsNull(product.proteins) + "," + checkIfNumberIsNull(product.carbohydrates) + "," + checkIfNumberIsNull(product.sugar) + "," + checkIfNumberIsNull(product.fat) + "," + checkIfNumberIsNull(product.saturatedFat)
-				+ "," + checkIfNumberIsNull(product.cholesterol) + "," + checkIfNumberIsNull(product.fiber) + "," + checkIfNumberIsNull(product.sodium) + "," + checkIfNumberIsNull(product.vitaminA) + "," + checkIfNumberIsNull(product.vitaminC)
-				+ "," + checkIfNumberIsNull(product.calcium) + "," + checkIfNumberIsNull(product.iron) + ");";
-		System.out.println(query);
-		//DBConnector.update("INSERT INTO Product (barcode, product_name, brand_id, quantity_number) VALUES ('" + product.code + "','" + product.name + "','" + brandId + "'," + checkIfNumberIsNull(product.size) + ");");
-		int status = DBConnector.update(query);
-		DBConnector.closeConnection();
-		return status;
-	}
-	
 	private static Object isNull(ResultSet result, String field, String type) {
 		try {
 			if (result.getObject(field) != null) {
@@ -278,7 +261,7 @@ public class Product {
 			e.printStackTrace();
 		}
 		if (type == "double") {
-			return -1.0;
+			return 0.0;
 		} else {
 			return "-";
 		}
