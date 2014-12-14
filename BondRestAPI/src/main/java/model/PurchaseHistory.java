@@ -3,6 +3,7 @@ package model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,36 @@ public class PurchaseHistory extends ResourceSupport {
 		return purchases;
 	}
 	
+	public static List<PurchaseHistory> getPurchasesForUserFilterByDate(int userID, Date date) {
+		if (!User.isUserIDExist(userID)) {
+			return null;
+		}
+		
+		List<PurchaseHistory> purchases = new ArrayList<>();
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT p.purchase_id, p.date_time, b.name, b.district, b.city, b.countrys from PurchaseHistory p, Branch b WHERE p.branch_id = b.branch_id and p.user_id = '" + userID + "' and CAST(p.date_time AS DATE) = '" + date + "'");
+		
+		try {
+			while (result.next()) {
+				PurchaseHistory purchase = new PurchaseHistory();
+				purchase.purchaseID = result.getInt("purchase_id");
+				purchase.date = result.getDate("date_time");
+				purchase.branch = result.getString("name");
+				purchase.branch_district = result.getString("district");
+				purchase.branch_city = result.getString("city");
+				purchase.branch_country = result.getString("countrys");
+				purchases.add(purchase);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return purchases;
+	}
+	
 	
 	public static List<Product> getProductsForUserPurchase(int userID, int purchaseID) {
 		if (!User.isUserIDExist(userID)) {
@@ -176,22 +207,33 @@ public class PurchaseHistory extends ResourceSupport {
 	}
 	
 	
-	/*public static int createPurchase(PurchaseHistory purchase) {
+	public static int createPurchase(int userID, int branchID, String[] barcodes) {
+		Calendar calendar = Calendar.getInstance();
+		java.sql.Timestamp sqlDate = new java.sql.Timestamp(calendar.getTime().getTime());
 		DBConnector.connect();
 		String query = "INSERT INTO PurchaseHistory (user_id, branch_id, date_time)"
-				+ " VALUES (" + purchase.userID + "," + purchase.branchID + ",'" + purchase.date + "');";
+				+ " VALUES (" + userID + "," + branchID + ",'" + sqlDate + "');";
 		System.out.println(query);
 		int status = DBConnector.update(query);
-		ResultSet result = DBConnector.query("SELECT purchase_id from PurchaseHistory WHERE user_id = " + purchase.userID + " and date_time='" + purchase.date + "'");
+		ResultSet result = DBConnector.query("SELECT purchase_id from PurchaseHistory WHERE user_id = " + userID + " and date_time='" + sqlDate + "'");
 		
 		try {
 			if (result != null && result.next()) {
 				int purchaseID = result.getInt("purchase_id");
-				for (String barcode : purchase.productList.keySet()) {
+				for (String barcode : barcodes) {
 					query = "INSERT INTO Purchase_Product (purchase_id, barcode, quantity)"
-							+ " VALUES (" + purchaseID + "," + barcode + ",'" + purchase.productList.get(barcode) + "');";
+							+ " VALUES (" + purchaseID + "," + barcode + ", 1);";
 					System.out.println(query);
 					status = DBConnector.update(query);
+					if (status == 0) {
+						query = "DELETE Purchase_Product where purchase_id = " + purchaseID;
+						System.out.println(query);
+						DBConnector.update(query);
+						query = "DELETE PurchaseHistory where purchase_id = " + purchaseID;
+						System.out.println(query);
+						DBConnector.update(query);
+						break;
+					}
 				}
 			}
 		} catch (SQLException e) {
@@ -199,5 +241,5 @@ public class PurchaseHistory extends ResourceSupport {
 		}
 		DBConnector.closeConnection();
 		return status;
-	}*/
+	}
 }
