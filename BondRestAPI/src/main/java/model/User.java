@@ -130,6 +130,23 @@ public class User extends ResourceSupport{
 		return status;
 	}
 	
+	public static int login(String username, String password) {
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT user_id from [BIP_project].[dbo].[User] WHERE username = '" + username + "' and password = '" + password + "'");
+		
+		try {
+			if (result != null && result.next()) {
+				return result.getInt("user_id");	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return 0;
+	}
+	
 	public static int deleteUser(int userID) {
 		DBConnector.connect();
 		int status = DBConnector.update("DELETE from [BIP_project].[dbo].[User] where user_id=" + userID);
