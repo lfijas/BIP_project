@@ -25,6 +25,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.Link;
 import org.apache.commons.codec.binary.Base64;
 
-@Controller
+@RestController
 public class UserController {
 
     private static final String template = "Hello, %s!";

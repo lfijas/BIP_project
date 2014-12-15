@@ -47,18 +47,18 @@ public class FoodGroup {
 	public static int addFoodGroup(String name) {
 		int id = 0;
 		DBConnector.connect();
-		DBConnector.update("INSERT INTO Food_groups (name) VALUES ('" + name + "');");
-		ResultSet result = DBConnector.query("SELECT id from Food_groups WHERE name = '" + name + "'");
+		int status = DBConnector.update("INSERT INTO Food_groups (group_name) VALUES ('" + name + "');");
+		//ResultSet result = DBConnector.query("SELECT id from Food_groups WHERE group_name = '" + name + "'");
 		
-		try {
+		/*try {
 			if (result != null && result.next()) {
 				return result.getInt("id");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		DBConnector.closeConnection();
-		return id;
+		return status;
 	}
 	
 	public static List<Product> getProductsFromFoodGroup(String name){

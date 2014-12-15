@@ -1,4 +1,4 @@
-package main.java.controller;
+package controller;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -26,6 +26,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +37,11 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.Link;
 import org.apache.commons.codec.binary.Base64;
 
+@RestController
 public class FoodGroupController {
 	
 	
-    @RequestMapping("/foodgroup/{name}/products")
+    @RequestMapping("/foodgroups/{name}/products")
     @ResponseBody
     public HttpEntity<CollectionList> products(@PathVariable String name) {
     	CollectionList main = new CollectionList();
