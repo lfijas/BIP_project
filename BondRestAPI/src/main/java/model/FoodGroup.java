@@ -11,7 +11,7 @@ public class FoodGroup {
 
 	private String name;
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 		List<Product> products = getProductsFromFoodGroup("Fruit");
 	
@@ -19,7 +19,7 @@ public class FoodGroup {
 	            System.out.println(products);
 	        }
 
-	}
+	}*/
 
 	public String getName() {
 		return name;
@@ -71,6 +71,7 @@ public class FoodGroup {
 			while(result.next()) {
 				Product product = new Product();
 				Product.setProduct(product, result);
+				products.add(product);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
