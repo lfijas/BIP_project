@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class HALResource extends ResourceSupport {

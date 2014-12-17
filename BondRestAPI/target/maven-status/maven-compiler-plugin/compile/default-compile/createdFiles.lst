@@ -1,0 +1,17 @@
+model/MainData.class
+model/Curies.class
+model/CollectionList.class
+controller/GreetingController.class
+controller/UserController.class
+controller/Application.class
+model/EmptyObject.class
+model/PurchaseHistory.class
+model/FoodGroup.class
+model/User.class
+controller/ProductController.class
+controller/FoodGroupController.class
+model/DBConnector.class
+model/Greeting.class
+model/User$Sex.class
+model/HALResource.class
+model/Product.class

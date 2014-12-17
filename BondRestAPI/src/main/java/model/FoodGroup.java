@@ -62,7 +62,7 @@ public class FoodGroup {
 	}
 	
 	public static List<Product> getProductsFromFoodGroup(String name){
-		List<Product> products = new ArrayList<>();
+		List<Product> products = new ArrayList<Product>();
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT p.barcode, p.group_id, p.product_name, p.price, p.quantity_number, p.unit, p.serving_size, p.calories, p.proteins_100, p.carbohydrates_100, p.sugar_100, p.fat_100, p.saturated_fat_100, p.fiber_100, p.cholesterol_100, p.sodium_100, p.calcium_100, p.iron_100, p.vitamin_a, p.vitamin_c FROM Product p LEFT JOIN Food_groups f on p.group_id = f.id WHERE f.group_name = '"+name+"'");

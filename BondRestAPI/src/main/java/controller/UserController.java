@@ -39,9 +39,6 @@ import org.apache.commons.codec.binary.Base64;
 @RestController
 public class UserController {
 
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
-
     @RequestMapping("/users/{userID}")
     @ResponseBody
     public HttpEntity<MainData> user(@RequestHeader("Authorization") String Authorization, @PathVariable int userID) {

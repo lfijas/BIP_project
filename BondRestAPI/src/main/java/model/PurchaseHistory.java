@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import model.Product;
+
 import org.springframework.hateoas.ResourceSupport;
 
 public class PurchaseHistory extends ResourceSupport {
@@ -105,7 +107,7 @@ public class PurchaseHistory extends ResourceSupport {
 			return null;
 		}
 		
-		List<PurchaseHistory> purchases = new ArrayList<>();
+		List<PurchaseHistory> purchases = new ArrayList<PurchaseHistory>();
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT p.purchase_id, p.date_time, b.name, b.district, b.city, b.countrys from PurchaseHistory p, Branch b WHERE p.branch_id = b.branch_id and p.user_id = '" + userID + "'");
@@ -135,7 +137,7 @@ public class PurchaseHistory extends ResourceSupport {
 			return null;
 		}
 		
-		List<PurchaseHistory> purchases = new ArrayList<>();
+		List<PurchaseHistory> purchases = new ArrayList<PurchaseHistory>();
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT p.purchase_id, p.date_time, b.name, b.district, b.city, b.countrys from PurchaseHistory p, Branch b WHERE p.branch_id = b.branch_id and p.user_id = '" + userID + "' and CAST(p.date_time AS DATE) = '" + date + "'");
@@ -168,7 +170,7 @@ public class PurchaseHistory extends ResourceSupport {
 			return null;
 		}
 		
-		List<Product> products = new ArrayList<>();
+		List<Product> products = new ArrayList<Product>();
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT pro.* from Purchase_product pp, Product pro "

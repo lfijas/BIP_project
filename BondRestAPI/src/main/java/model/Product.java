@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.DBConnector;
+
 import org.springframework.hateoas.ResourceSupport;
 
 
@@ -185,7 +186,28 @@ public class Product extends ResourceSupport{
 		this.iron = iron;
 	}
 	
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+			
+	public static List<Product> getAllProducts()
+	{	
+		List<Product> products = new ArrayList<Product>();
+		DBConnector.connect();
+		
+		ResultSet result = DBConnector.query("SELECT * from Product p LEFT JOIN Brand b on p.brand_id = b.id LEFT JOIN Food_groups g on p.group_id = g.id");
+		
+		try {
+			while (result.next()) {
+				Product product = new Product();
+				setProduct(product, result);
+				products.add(product);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DBConnector.closeConnection();
+		return products;
+	}
 	
 	public static Product GetProductByBarcode(String barcode)
 	{	
@@ -210,7 +232,7 @@ public class Product extends ResourceSupport{
 	
 	public static List<String> GetProductCustomCategory(String barcode, String userid)
 	{	
-		List<String> customCats = new ArrayList<>();
+		List<String> customCats = new ArrayList<String>();
 		DBConnector.connect();
 		
 		ResultSet result = DBConnector.query("SELECT custom_category_name from CustomCategory c, Product_CustomCategory pc WHERE barcode = " + barcode + " and user_id = " + userid + " and c.custom_cat_id = pc.custom_cat_id");
@@ -228,12 +250,31 @@ public class Product extends ResourceSupport{
 		return customCats;
 	}
 	
+	public static int addProduct(Product product) {
+		DBConnector.connect();
+		String query = "INSERT INTO Product (barcode, product_name, group_id, price"
+				+ ") VALUES (" + product.barcode + ",'" + product.product_name + "'," + product.food_group_id + "," + product.price + ");";
+		System.out.println(query);
+		int status = DBConnector.update(query);
+		DBConnector.closeConnection();
+		return status;
+	}
+	
+	public static int updateProduct(Product product) {
+		DBConnector.connect();
+		String query = "UPDATE Product set product_name = '" + product.product_name + "', group_id = " + product.food_group_id + ", price = " + product.price;
+		System.out.println(query);
+		int status = DBConnector.update(query);
+		DBConnector.closeConnection();
+		return status;
+	}
+	
 	public static void setProduct(Product product, ResultSet result) throws SQLException {
 		product.barcode = result.getString("barcode");
-		product.product_name = (String)isNull(result, "product_name", "string");
+		product.product_name = result.getString("product_name");
 		product.food_group_id = result.getInt("group_id");
 		product.quantity_number = (double) isNull(result, "quantity_number", "double");
-		product.unit = (String) isNull(result, "unit", "string");
+		product.unit = result.getString("unit");
 		product.calories = (double) isNull(result, "calories", "double");
 		product.proteins = (double) isNull(result, "proteins_100", "double");
 		product.carbohydrates = (double) isNull(result, "carbohydrates_100", "double");
@@ -249,23 +290,15 @@ public class Product extends ResourceSupport{
 		product.iron = (double) isNull(result, "iron_100", "double");
 	}
 	
-	private static Object isNull(ResultSet result, String field, String type) {
+	private static double isNull(ResultSet result, String field, String type) {
 		try {
 			if (result.getObject(field) != null) {
-				if (type == "double") {
-					return roundTo2Decimals(result.getDouble(field));
-				} else {
-					return result.getString(field);
-				}
+				return roundTo2Decimals(result.getDouble(field));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (type == "double") {
-			return 0.0;
-		} else {
-			return "-";
-		}
+		return 0.0;
 	}
 	
 	private static double roundTo2Decimals(double val) {
