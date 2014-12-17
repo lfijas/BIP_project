@@ -102,7 +102,7 @@ public class ProductController {
     public HttpEntity<MainData> updateProduct(@PathVariable String barcode, Product product) {
     	MainData main = new MainData();
     	HttpStatus status;
-    	if (barcode != null && barcode.length() != 0 && product.getProduct_name() != null && product.getProduct_name().length() != 0 && Product.updateProduct(product) != 0) {
+    	if (barcode != null && barcode.length() != 0 && product.getProduct_name() != null && product.getProduct_name().length() != 0 && Product.updateProduct(product, barcode) != 0) {
 	        main.setSuccess(true);
 	        main.setStatus(200);
 	        status = HttpStatus.OK;

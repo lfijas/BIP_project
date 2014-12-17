@@ -260,9 +260,10 @@ public class Product extends ResourceSupport{
 		return status;
 	}
 	
-	public static int updateProduct(Product product) {
+	public static int updateProduct(Product product, String barcode) {
 		DBConnector.connect();
-		String query = "UPDATE Product set product_name = '" + product.product_name + "', group_id = " + product.food_group_id + ", price = " + product.price;
+		String query = "UPDATE Product set product_name = '" + product.product_name + "', group_id = " + product.food_group_id + ", price = " + product.price +
+				"where barcode = " + barcode;
 		System.out.println(query);
 		int status = DBConnector.update(query);
 		DBConnector.closeConnection();
