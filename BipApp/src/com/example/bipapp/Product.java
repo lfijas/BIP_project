@@ -20,7 +20,7 @@ public class Product implements Parcelable{
 		this.mBrand = brand;
 	}
 	
-	public Product(String name, String barcode, String quantity, String price) {
+	public Product(String name, String barcode, int quantity, double price) {
 		this.mName = name;
 		this.mBarcode = barcode;
 		this.mQuantityPrice = quantity + " x " + price;
