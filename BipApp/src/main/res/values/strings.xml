@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Bond</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="search_hint">Enter product name</string>
+    <string name="search_button">Search</string>
+    <string name="no_network">No network connection. Network connection is required!</string>
+    <string name="progress_info">Retrieving data. Please wait...</string>
+    <string name="empty_search">Search field cannot be empty</string>
+    <string name="title_activity_nutrition_info">Nutritional Info</string>
+    <string name="fat_label">Fat: </string>
+    <string name="sugar_label">Sugar: </string>
+    <string name="carbohydrates_label">Carbohydrates: </string>
+    <string name="proteins_label">Proteins: </string>
+    <string name="calories_label">Calories: </string>
+    <string name="product_label">Product: </string>
+    <string name="saturated_fat_label">Saturated fat: </string>
+    <string name="fiber_label">Fiber: </string>
+    <string name="cholesterol_label">Cholesterol: </string>
+    <string name="sodium_label">Sodium: </string>
+    <string name="calcium_label">Calcium: </string>
+    <string name="iron_label">Iron: </string>
+    <string name="vitamin_a_label">Vitamin A: </string>
+    <string name="vitamin_c_label">Vitamin C: </string>
+    <string name="title_product_catalog">Product catalog</string>
+    <string name="browse_product_catalog">Browse product catalog</string>
+    <string name="browse_purchase_history">Browse purchase history</string>
+    <string name="title_activity_login">Login</string>
+    <string name="username_hint">Enter username</string>
+    <string name="password_hint">Enter password</string>
+    <string name="login">Login</string>
+    <string name="username_password_empty">Neither username nor password can be empty.</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="login_failure">Unable to login! Please use valid credentials.</string>
+    <string name="title_activity_browse_purchase_history">Purchase History</string>
+    <string name="logout">Logout</string>
+    <string name="greeting">Hi, </string>
+    <string name="logout_info">You have been logged out.</string>
+    <string name="previous_purchases">Previous purchases</string>
+    <string name="error">An error occurred! Try to log in again</string>
+    <string name="title_activity_purchase_summary">Purchase Summary</string>
+    <string name="title_activity_custom_category">CustomCategoryActivity</string>
+    <string name="view_summary">View Summary</string>
+    <string name="title_activity_summary">SummaryActivity</string>
+    <string name="title_activity_nutrition_summary">NutritionSummaryActivity</string>
+    <string name="filter">Filter</string>
+    <string name="title_activity_add_category">AddCategoryActivity</string>
+    <string name="add_custom_category">Add custom category</string>
+    <string name="add_category_hint">Name of your custom category</string>
+    <string name="add">Add</string>
+    <string name="empty_category">New category cannot be empty</string>
+    <string name="category_add">New category has been added</string>
+
+</resources>
