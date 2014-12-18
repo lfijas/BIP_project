@@ -24,9 +24,12 @@ public class DBConnector {
 
 	public static void connect(String database) {
 		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			conn = DriverManager.getConnection("jdbc:sqlserver://" + host + ":" + port + ";user=" + username + ";password=" + password + ";database=" + database);
 			System.out.println("DB connect success");
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
