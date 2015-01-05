@@ -3,4 +3,5 @@ BipApp/.classpath
 BipApp/gen
 *~
 WebApp/build/classes
+BondRestAPI/target/*
 
