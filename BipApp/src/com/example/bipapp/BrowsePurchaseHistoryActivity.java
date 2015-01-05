@@ -66,7 +66,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 			};
 		}
 		
-		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.fliters, android.R.layout.simple_spinner_dropdown_item);
+		SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.fliters, R.layout.spinner_item);
 		OnNavigationListener callback = new OnNavigationListener() {
 			
 			String[] items = getResources().getStringArray(R.array.fliters);
