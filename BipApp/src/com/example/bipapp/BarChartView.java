@@ -12,39 +12,38 @@ import org.afree.data.category.CategoryDataset;
 import org.afree.data.category.DefaultCategoryDataset;
 import org.afree.graphics.SolidColor;
 import org.afree.graphics.geom.Font;
+import org.afree.chart.labels.ItemLabelAnchor;
+import org.afree.chart.labels.ItemLabelPosition;
+import org.afree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.afree.chart.renderer.category.CategoryItemRenderer;
+import org.afree.ui.TextAnchor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.Paint;
 
 import java.util.List;
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 
 /**
  * PieChartDemo1View
  */
-public class LineChartView extends DemoView {
+public class BarChartView extends DemoView {
 
     /**
      * constructor
      * @param context
      */
-    public LineChartView(Context context) {
+    public BarChartView(Context context) {
         super(context);
     }
 
-    public void drawChart(JSONArray result, String measure, String year) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        try {
-            for (int i = 0; i < result.length(); i++) {
-                dataset.addValue(((JSONObject) result.get(i)).getDouble(measure), "Measure", new DateFormatSymbols().getShortMonths()[((JSONObject) result.get(i)).getInt("title") - 1]);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        AFreeChart chart = createChart(dataset, "Total " + measure + " in " + year);
+    public void drawChart(CategoryDataset dataset, String title, String domain, double max, boolean color) {
+        AFreeChart chart = createChart(dataset, title, domain, max, color);
 
         setChart(chart);
     }
@@ -56,15 +55,15 @@ public class LineChartView extends DemoView {
      *
      * @return The chart.
      */
-    private static AFreeChart createChart(CategoryDataset dataset, String chartTitle) {
+    private static AFreeChart createChart(CategoryDataset dataset, String chartTitle, String domain, double max, boolean color) {
 
         // create the chart...
-        AFreeChart chart = ChartFactory.createLineChart(
+        AFreeChart chart = ChartFactory.createBarChart(
                 chartTitle,       // chart title
-                "Month",               // domain axis label
-                "Measure",                  // range axis label
+                domain,               // domain axis label
+                "Percentage",                  // range axis label
                 dataset,                  // data
-                PlotOrientation.VERTICAL, // orientation
+                PlotOrientation.HORIZONTAL, // orientation
                 false,                     // include legend
                 true,                     // tooltips?
                 false                     // URLs?
@@ -88,6 +87,7 @@ public class LineChartView extends DemoView {
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         Font font2 = new Font("SansSerif", Typeface.NORMAL, 30);
         rangeAxis.setTickLabelFont(font2);
+        //rangeAxis.setRange(0.00, max + (max / 7.0));
 
 
         CategoryAxis domainAxis = plot.getDomainAxis();
@@ -95,7 +95,25 @@ public class LineChartView extends DemoView {
                 CategoryLabelPositions.createUpRotationLabelPositions(
                         Math.PI / 6.0));
         domainAxis.setTickLabelFont(font2);
-        // OPTIONAL CUSTOMISATION COMPLETED.
+
+        CategoryItemRenderer renderer;
+        if (color) {
+            renderer = new CustomRenderer(
+                    new Paint[] {new Paint(Color.MAGENTA), new Paint(Color.BLUE), new Paint(Color.CYAN), new Paint(Color.GREEN),
+                            new Paint(Color.YELLOW), new Paint(Color.argb(1, 255, 128, 0)), new Paint(Color.RED), new Paint(Color.argb(1, 255, 105, 180))}
+            );
+        } else {
+            renderer = new CustomRenderer(
+                    new Paint[] {new Paint(Color.argb(1, 255, 128, 0))}
+            );
+        }
+
+        /*DecimalFormat decimalformat1 = new DecimalFormat("##.##'%'");
+        renderer.setItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", decimalformat1));
+        //renderer.setItemLabelsVisible(true);
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE3, TextAnchor.CENTER_LEFT));
+        plot.setRenderer(renderer);*/
 
         return chart;
 

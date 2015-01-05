@@ -17,19 +17,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.olap4j.CellSet;
-import org.olap4j.OlapConnection;
-import org.olap4j.OlapException;
-import org.olap4j.layout.RectangularCellSetFormatter;
-import org.olap4j.metadata.Member;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.HttpResponse;
 
 
 public class SummaryActivity extends Activity {
@@ -37,6 +42,8 @@ public class SummaryActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -56,17 +63,21 @@ public class SummaryActivity extends Activity {
 	}
 
 
-    private class DbConnection extends AsyncTask<String, Void, List<Summary>> {
+    private class DbConnection extends AsyncTask<String, Void, JSONArray> {
 
         private Context mContext;
+        private String year;
+        private String measure;
 
         public DbConnection(Context context) {
             mContext = context;
         }
 
         @Override
-        protected List<Summary> doInBackground(String... params) {
-            return sumNutritionGroupByMonth(params[0], 2014);
+        protected JSONArray doInBackground(String... params) {
+            year = "2014";
+            measure = "calories";
+            return sumNutritionGroupByMonth(params[0], year);
         }
 
         @Override
@@ -75,130 +86,50 @@ public class SummaryActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(List<Summary> result) {
+        protected void onPostExecute(JSONArray result) {
+
             List<Double> measures = new ArrayList<Double>();
-            for (Summary summary : result) {
-                measures.add(summary.getCalories());
+            try {
+                for (int i = 0; i < result.length(); i++) {
+                    measures.add(((JSONObject)result.get(i)).getDouble(measure));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             Log.i("result", measures.toString());
 
             LineChartView mView = new LineChartView(mContext);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mView.drawChart(result, measure, year);
             setContentView(mView);
         }
 
-        public List<Summary> sumNutritionGroupByMonth(String userid, int year) {
-
-            String query = "select {[Measures].[SUMsize], [Measures].[SUMcalories], [Measures].[SUMproteins], [Measures].[SUMcarbohydrates], [Measures].[SUMsugar], [Measures].[SUMfat],"
-                    + "[Measures].[SUMsaturatedfat], [Measures].[SUMfiber], [Measures].[SUMchoresterol], [Measures].[SUMsodium], [Measures].[SUMcalcium]"
-                    + ", [Measures].[SUMiron], [Measures].[SUMvitaminA], [Measures].[SUMvitaminC], [Measures].[SUMprice]} ON COLUMNS,"
-                    + "[Date.Date Hierarchy].[YEAR].[" + year + "].children ON ROWS "
-                    + "from [Nutrition_Fact] "
-                    + "where([Customer.Customer Hierarchy].[ID].[" + userid + "])";
-
-            return query(query, 1);
-        }
-
-        private List<Summary> query(String query, int titleIndex) {
-
-            CellSet result = OLAPQuery(query);
-
-            List<Summary> sumList = new ArrayList<Summary>();
-
+        public JSONArray sumNutritionGroupByMonth(String userid, String year) {
+            JSONArray jarray = null;
             try {
+                HttpClient client = new DefaultHttpClient();
 
-                for (int i = 0; i < result.getAxes().get(1).getPositionCount(); i++) {
+                String getURL = "http://54.149.71.241/Nutrition/sumNutritionGroupByMonth?userID=" + userid + "&year=" + year;
+                HttpGet get = new HttpGet(getURL);
+                get.setHeader("Accept", "application/json");
+                HttpResponse responseGet = client.execute(get);
+                BufferedReader rd = new BufferedReader(new InputStreamReader(
+                        responseGet.getEntity().getContent(), "utf-8"));
 
-                    Summary summary = new Summary();
-
-                    Member member = result.getAxes().get(1).getPositions().get(i).getMembers().get(titleIndex);
-                    String title = "";
-                    if (member != null) {
-                        title = member.getName();
-                    }
-                    summary.setTitle(title);
-
-                    for (int j = 0; j < result.getAxes().get(0).getPositionCount(); j++) {
-                        ArrayList<Integer> list = new ArrayList<Integer>();
-                        list.add(j);
-                        list.add(i);
-                        double measure = result.getCell(list).isNull() ? 0 : result.getCell(list).getDoubleValue();
-                        switch (j) {
-                            case 0:
-                                summary.setSize(measure);
-                                break;
-                            case 1:
-                                summary.setCalories(measure);
-                                break;
-                            case 2:
-                                summary.setProteins(measure);
-                                break;
-                            case 3:
-                                summary.setCarbohydrates(measure);
-                                break;
-                            case 4:
-                                summary.setSugar(measure);
-                                break;
-                            case 5:
-                                summary.setFat(measure);
-                                break;
-                            case 6:
-                                summary.setSaturatedFat(measure);
-                                break;
-                            case 7:
-                                summary.setFiber(measure);
-                                break;
-                            case 8:
-                                summary.setCholesterol(measure);
-                                break;
-                            case 9:
-                                summary.setSodium(measure);
-                                break;
-                            case 10:
-                                summary.setCalcium(measure);
-                                break;
-                            case 11:
-                                summary.setIron(measure);
-                                break;
-                            case 12:
-                                summary.setVitaminA(measure);
-                                break;
-                            case 13:
-                                summary.setVitaminC(measure);
-                                break;
-                        }
-
-                    }
-                    sumList.add(summary);
+                StringBuffer result = new StringBuffer();
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
                 }
-            } catch (OlapException e) {
-                e.printStackTrace();
-            }
 
-            return sumList;
+                jarray = new JSONArray(result.toString());
 
-        }
-
-        public CellSet OLAPQuery(String query) {
-
-            CellSet result = null;
-            try {
-                // Register driver.
-                Class.forName("mondrian.olap4j.MondrianOlap4jDriver");
-                Connection connection = DBConnector.connectWithCatelog("Bond_dw", "/Users/vamhan/Desktop/NutritionSchema2.xml");
-
-                OlapConnection olapConnection;
-                olapConnection = connection.unwrap(OlapConnection.class);
-
-
-                // Prepare a statement.
-                result = olapConnection.createStatement().executeOlapQuery(query);
-
+                rd.close();
+                get.abort();
             } catch (Exception e) {
+                Log.w("Error connection","" + e.getMessage());
                 e.printStackTrace();
             }
-
-            return result;
+            return jarray;
         }
     }
 
