@@ -44,12 +44,16 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	
 	private Button mViewPurchaseHistorySummaryButton;
 	
+	private Context mContext;
+	private String userId;
+	
 	public final static String EXTRA_MESSAGE = "com.example.bipapp.purchaseId";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse_purchase_history);
+		mContext = this;
 
 		if (mItemClickListener == null) {
 			mItemClickListener = new OnItemClickListener() {
@@ -78,8 +82,8 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 					case 0:
 						break;
 					case 1:
-						datePicker = DatePickerFragment.newInstance(0);
-						datePicker.show(getFragmentManager(), "minDatePicker");
+						DateRangeDialogFragment dialog = new DateRangeDialogFragment();
+						dialog.show(((Activity) mContext).getFragmentManager(), "date_range_dialog");
 						break;
 					case 2:
 						datePicker = DatePickerFragment.newInstance(1);
@@ -105,7 +109,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		});
 		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		String user_id = Integer.toString(settings.getInt("user_id", -1));
+		userId = Integer.toString(settings.getInt("user_id", -1));
 		String user = settings.getString("username", "");
 		if (user.equals("")) {
 			Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
@@ -134,8 +138,8 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 			if (networkInfo != null && networkInfo.isConnected()) {
-				if (!user_id.equals("-1")) {
-					new DbConnection(BrowsePurchaseHistoryActivity.this).execute(user_id);
+				if (!userId.equals("-1")) {
+					new DbConnection(BrowsePurchaseHistoryActivity.this).execute(userId, null, null);
 				}
 				else {
 					Toast.makeText(BrowsePurchaseHistoryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
@@ -160,6 +164,14 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		super.onSaveInstanceState(outState);
 	}
 	
+	public String getUserId() {
+		return userId;
+	}
+	
+	public void applyFilter(String user_id, String dateFrom, String dateTill) {
+		new DbConnection(BrowsePurchaseHistoryActivity.this).execute(user_id, dateFrom, dateTill);
+	}
+	
 	private class DbConnection extends AsyncTask<String, Void, ArrayList<Purchase>> {
 		
 		private Context mContext;
@@ -170,7 +182,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		
 		@Override
 		protected ArrayList<Purchase> doInBackground(String... params) {
-			return connectToDatabase(params[0]);
+			return connectToDatabase(params[0], params[1], params[2]);
 		}
 		
 		@Override
@@ -198,7 +210,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 			purchaseHistoryListView.setOnItemClickListener(mItemClickListener);
 		}
 		
-		public ArrayList<Purchase> connectToDatabase(String user_id) {
+		public ArrayList<Purchase> connectToDatabase(String user_id, String dateFrom, String dateTill) {
 		    
 			Connection conn = null;
 			ArrayList<Purchase> resultArrayList = null;
@@ -211,10 +223,20 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		 
 		        Log.w("Connection","open");
 		        Statement statement = conn.createStatement();
-		        ResultSet resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
-		        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
-		        		" WHERE [user_id] = " + user_id);
-		 
+		        ResultSet resultSet;
+		        if (dateFrom == null) {
+		        	resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
+			        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
+			        		" WHERE [user_id] = " + user_id);
+		        }
+		        else {
+		        	Log.i("user_id", user_id);
+		        	Log.i("dateFrom", dateFrom);
+		        	Log.i("dateTill", dateTill);
+		        	resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
+			        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
+			        		" WHERE [user_id] = " + user_id + " and date_time >= '" + dateFrom + "' and date_time <= '" + dateTill + "'");
+		        }
 
 		        resultArrayList = new ArrayList<Purchase>();
 				try {
