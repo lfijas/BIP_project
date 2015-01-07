@@ -77,15 +77,15 @@ public class BarChartView extends DemoView {
         // get a reference to the plot for further customisation...
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        chart.getTitle().setFont(new Font("SansSerif", Typeface.BOLD, 50));
-        Font font = new Font("SansSerif", Typeface.NORMAL, 40);
+        chart.getTitle().setFont(new Font("SansSerif", Typeface.BOLD, 25));
+        Font font = new Font("SansSerif", Typeface.NORMAL, 20);
         plot.getDomainAxis().setLabelFont(font);
         plot.getRangeAxis().setLabelFont(font);
 
         // set the range axis to display integers only...
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        Font font2 = new Font("SansSerif", Typeface.NORMAL, 30);
+        Font font2 = new Font("SansSerif", Typeface.NORMAL, 15);
         rangeAxis.setTickLabelFont(font2);
         //rangeAxis.setRange(0.00, max + (max / 7.0));
 
