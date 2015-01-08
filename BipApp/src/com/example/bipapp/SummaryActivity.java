@@ -1,58 +1,59 @@
 package com.example.bipapp;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.apache.http.HttpResponse;
 
 
 public class SummaryActivity extends Activity {
 
 	private RelativeLayout mRelativeLayout;
+	private Button mMonthSummaryButton;
+	private Spinner mYearSpinner;
+	private Spinner mMonthSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.summary_activity);
         
-      //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
-        
         mRelativeLayout = (RelativeLayout) findViewById(R.id.graph_purchase_summary_layout);
-        //mLineChartView = (LineChartView) findViewById(R.id.line_chart_view);
-        
+        mMonthSummaryButton = (Button) findViewById(R.id.summary_by_month_button);
+        mYearSpinner = (Spinner) findViewById(R.id.years_spinner);
+        mMonthSpinner = (Spinner) findViewById(R.id.months_spinner);
+        mMonthSummaryButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.i("year", String.valueOf(mYearSpinner.getSelectedItem()));
+				Log.i("month", String.valueOf(mMonthSpinner.getSelectedItem()));
+				
+			}
+		});
         
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -113,6 +114,7 @@ public class SummaryActivity extends Activity {
             
             RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
+            p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
             p.addRule(RelativeLayout.ABOVE, R.id.summary_by_month_button);
             mView.setLayoutParams(p);
             

@@ -4,6 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+    <LinearLayout
+        android:id="@+id/spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal" >
+    
+        <Spinner
+	        android:id="@+id/years_spinner"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:entries="@array/years"
+	        android:prompt="@string/year_prompt"
+	        android:layout_gravity="left" />
+ 
+	    <Spinner
+	        android:id="@+id/months_spinner"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:entries="@array/months"
+	        android:layout_gravity="right" />
+    
+    </LinearLayout>
     
     <Button 
         android:id="@+id/summary_by_month_button"
