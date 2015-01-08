@@ -2,7 +2,8 @@
 <resources >
 	<string-array name="fliters">
 	     <item>Filters</item>
-	    <item>Date from</item>
-	    <item>Date till</item>
+	    <item>Date range</item>
+	    <item>Price</item>
+	    <item>Clear filters</item>
 	</string-array>
 </resources>

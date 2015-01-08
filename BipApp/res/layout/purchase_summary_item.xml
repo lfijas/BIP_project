@@ -23,11 +23,18 @@
 	        android:layout_marginLeft="6dip"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-    <Button 
-        android:id="@+id/add_category_button"
-	    android:layout_weight="4"
-	    android:layout_width="match_parent"
+    <LinearLayout 
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="add" />
+        android:layout_weight="4" >
+        
+        <Button 
+	        android:id="@+id/add_category_button"
+		    android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	    	android:layout_gravity="center_vertical"
+	        android:text="Cat." />
+    </LinearLayout>
+    
 
 </LinearLayout>
