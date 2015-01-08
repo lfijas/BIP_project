@@ -51,6 +51,13 @@ public class DemoView extends View
         mHandler = new Handler();
         this.initialize();
     }
+    
+    public DemoView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        mHandler = new Handler();
+        this.initialize();
+
+    }
 
     /**
      * initialize parameters

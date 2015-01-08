@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +40,20 @@ import org.apache.http.HttpResponse;
 
 public class SummaryActivity extends Activity {
 
+	private RelativeLayout mRelativeLayout;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.summary_activity);
+        
+      //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.graph_purchase_summary_layout);
+        //mLineChartView = (LineChartView) findViewById(R.id.line_chart_view);
+        
+        
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -100,7 +110,13 @@ public class SummaryActivity extends Activity {
 
             LineChartView mView = new LineChartView(mContext);
             mView.drawChart(result, measure, year);
-            setContentView(mView);
+            
+            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            p.addRule(RelativeLayout.ABOVE, R.id.summary_by_month_button);
+            mView.setLayoutParams(p);
+            
+            mRelativeLayout.addView(mView);
         }
 
         public JSONArray sumNutritionGroupByMonth(String userid, String year) {

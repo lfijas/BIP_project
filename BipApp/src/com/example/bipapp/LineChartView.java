@@ -1,8 +1,10 @@
 package com.example.bipapp;
 
 
-import org.afree.chart.ChartFactory;
+import java.text.DateFormatSymbols;
+
 import org.afree.chart.AFreeChart;
+import org.afree.chart.ChartFactory;
 import org.afree.chart.axis.CategoryAxis;
 import org.afree.chart.axis.CategoryLabelPositions;
 import org.afree.chart.axis.NumberAxis;
@@ -18,9 +20,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-
-import java.util.List;
-import java.text.DateFormatSymbols;
+import android.os.Handler;
+import android.util.AttributeSet;
 
 /**
  * PieChartDemo1View
@@ -33,6 +34,15 @@ public class LineChartView extends DemoView {
      */
     public LineChartView(Context context) {
         super(context);
+    }
+    
+    public LineChartView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+    
+    public LineChartView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+
     }
 
     public void drawChart(JSONArray result, String measure, String year) {
