@@ -26,7 +26,8 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
 	private ArrayList<Product> listData;
 	private LayoutInflater layoutInflater;
 	private Context mContext;
-	private int mPosition;
+	private String mBarcode;
+	private String mUserId;
 	
 	public PurchaseSummaryListAdapter(Context context, ArrayList<Product> listData) {
 		mContext = context;
@@ -50,9 +51,8 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
-		mPosition = position;
 		if (convertView == null) {
 			convertView = layoutInflater.inflate(R.layout.purchase_summary_item, null);
 			holder = new ViewHolder();
@@ -64,14 +64,18 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
 		else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.text1.setText(listData.get(mPosition).getName());
-		holder.text2.setText(listData.get(mPosition).getQuantityPrice());
+		Log.i("getView", "position: " + position);
+		holder.text1.setText(listData.get(position).getName());
+		holder.text2.setText(listData.get(position).getQuantityPrice());
 		holder.addCategoryButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences((Activity) mContext);
-				new DbConnection((Activity) mContext).execute(listData.get(mPosition).getBarcode(), Integer.toString(sp.getInt("user_id", -1)));
+				Log.i("onClick", "mPosition: " + position);
+				mBarcode = listData.get(position).getBarcode();
+				mUserId = Integer.toString(sp.getInt("user_id", -1));
+				new DbConnection((Activity) mContext).execute(mBarcode, mUserId);
 			}
 		});
 		
@@ -98,7 +102,7 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
         	String[] resultArray = result.toArray(new String[result.size()]);
-        	CustomCategoryDialogFragment dialog = CustomCategoryDialogFragment.newInstance(resultArray);
+        	CustomCategoryDialogFragment dialog = CustomCategoryDialogFragment.newInstance(resultArray, mBarcode, mUserId);
 			dialog.show(((Activity) mContext).getFragmentManager(), "dialog");
         }
 
@@ -115,11 +119,13 @@ public class PurchaseSummaryListAdapter extends BaseAdapter {
 
                 Log.w("Connection","open");
                 Statement statement = conn.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT distinct custom_category_name FROM [CustomCategory] "
+                String query = "SELECT distinct custom_category_name FROM [CustomCategory] "
                 		+ "join Product_CustomCategory on Product_CustomCategory.custom_cat_id = CustomCategory.custom_cat_id "
                 		+ "join Product on Product_CustomCategory.barcode = Product.barcode "
                         + "WHERE Product.barcode = " + barcode
-                        + " and CustomCategory.user_id = " + userId);
+                        + " and CustomCategory.user_id = " + userId;
+                Log.i("get categories assigned to product", query);
+                ResultSet resultSet = statement.executeQuery(query);
 
 
                 resultArrayList = new ArrayList<String>();
