@@ -27,4 +27,9 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+    
+	<string-array name="measures">
+        <item>Calories</item>
+        <item>Price</item>
+    </string-array>
 </resources>

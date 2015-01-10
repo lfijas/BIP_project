@@ -23,6 +23,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -35,6 +36,7 @@ public class SummaryActivity extends Activity {
 	private Button mMonthSummaryButton;
 	private Spinner mYearSpinner;
 	private Spinner mMonthSpinner;
+	private Spinner mMeasureSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,9 @@ public class SummaryActivity extends Activity {
         mRelativeLayout = (RelativeLayout) findViewById(R.id.graph_purchase_summary_layout);
         mMonthSummaryButton = (Button) findViewById(R.id.summary_by_month_button);
         mYearSpinner = (Spinner) findViewById(R.id.years_spinner);
+        mYearSpinner.setSelection(1);
         mMonthSpinner = (Spinner) findViewById(R.id.months_spinner);
+        mMeasureSpinner = (Spinner) findViewById(R.id.measure_spinner);
         mMonthSummaryButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -55,6 +59,18 @@ public class SummaryActivity extends Activity {
 			}
 		});
         
+        mYearSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(){
+        	
+        	@Override
+        	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+        		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String user_id = Integer.toString(settings.getInt("user_id", -1));
+                String year = parent.getItemAtPosition(pos).toString();
+                Log.i("year", year);
+        		new DbConnection(SummaryActivity.this).execute(user_id, year);
+        	  }
+        });
+        
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -62,7 +78,7 @@ public class SummaryActivity extends Activity {
         String user_id = Integer.toString(settings.getInt("user_id", -1));
         if (networkInfo != null && networkInfo.isConnected()) {
             if (!user_id.equals("-1")) {
-                new DbConnection(SummaryActivity.this).execute(user_id);
+                new DbConnection(SummaryActivity.this).execute(user_id, "2014");
             }
             else {
                 Toast.makeText(SummaryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
@@ -72,7 +88,6 @@ public class SummaryActivity extends Activity {
             Toast.makeText(SummaryActivity.this, R.string.no_network, Toast.LENGTH_LONG).show();
         }
 	}
-
 
     private class DbConnection extends AsyncTask<String, Void, JSONArray> {
 
@@ -88,7 +103,7 @@ public class SummaryActivity extends Activity {
         protected JSONArray doInBackground(String... params) {
             year = "2014";
             measure = "calories";
-            return sumNutritionGroupByMonth(params[0], year);
+            return sumNutritionGroupByMonth(params[0], params[1]);
         }
 
         @Override
