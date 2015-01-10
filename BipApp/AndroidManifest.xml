@@ -64,6 +64,10 @@
             android:name="com.example.bipapp.NutritionSummaryActivity"
             android:label="@string/title_activity_add_category" >
         </activity>
+        <activity
+            android:name="com.example.bipapp.FilterSummaryActivity"
+            android:label="@string/title_activity_filter_summary" >
+        </activity>
     </application>
 
 </manifest>

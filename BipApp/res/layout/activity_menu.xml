@@ -28,6 +28,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/browse_purchase_history" />
+    
+    <Button android:id="@+id/view_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/view_summary" />
         
     <Button android:id="@+id/add_category_button"
         android:layout_width="match_parent"

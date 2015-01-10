@@ -18,6 +18,7 @@ public class MenuActivity extends Activity {
 	private Button logoutButton;
 	private Button addCustomCategoryButton;
 	private TextView greetingText;
+	private Button summaryButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,16 @@ public class MenuActivity extends Activity {
 		logoutButton = (Button) findViewById(R.id.logoutButton);
 		greetingText = (TextView) findViewById(R.id.greeting_text);
 		addCustomCategoryButton = (Button) findViewById(R.id.add_category_button);
+		summaryButton = (Button) findViewById(R.id.view_summary);
+		
+		summaryButton.setOnClickListener(new View.OnClickListener()  {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MenuActivity.this, SummaryActivity.class);
+				startActivity(intent);
+			}
+		});
 		
 		browseProductCatalogButton.setOnClickListener(new View.OnClickListener() {
 			

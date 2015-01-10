@@ -52,5 +52,6 @@
     <string name="empty_category">New category cannot be empty</string>
     <string name="category_add">New category has been added</string>
     <string name="year_prompt">Choose a year</string>
+    <string name="title_activity_filter_summary">FilterSummaryActivity</string>
 
 </resources>

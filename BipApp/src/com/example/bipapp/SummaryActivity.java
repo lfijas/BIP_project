@@ -2,14 +2,17 @@ package com.example.bipapp;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.afree.data.category.DefaultCategoryDataset;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -33,23 +36,30 @@ import android.widget.Toast;
 public class SummaryActivity extends Activity {
 
 	private RelativeLayout mRelativeLayout;
-	private Button mMonthSummaryButton;
 	private Spinner mYearSpinner;
 	private Spinner mMonthSpinner;
 	private Spinner mMeasureSpinner;
+	private String mYear;
+	private String mMeasure;
+	private JSONArray mResult;
+	private Context mContext;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.summary_activity);
         
+        mContext = this;
+        
+        mYear = "2014";
+        mMeasure = "calories";
+        
         mRelativeLayout = (RelativeLayout) findViewById(R.id.graph_purchase_summary_layout);
-        mMonthSummaryButton = (Button) findViewById(R.id.summary_by_month_button);
         mYearSpinner = (Spinner) findViewById(R.id.years_spinner);
         mYearSpinner.setSelection(1);
         mMonthSpinner = (Spinner) findViewById(R.id.months_spinner);
         mMeasureSpinner = (Spinner) findViewById(R.id.measure_spinner);
-        mMonthSummaryButton.setOnClickListener(new View.OnClickListener() {
+        /*mMonthSummaryButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -57,7 +67,7 @@ public class SummaryActivity extends Activity {
 				Log.i("month", String.valueOf(mMonthSpinner.getSelectedItem()));
 				
 			}
-		});
+		});*/
         
         mYearSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(){
         	
@@ -65,10 +75,98 @@ public class SummaryActivity extends Activity {
         	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
         		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String user_id = Integer.toString(settings.getInt("user_id", -1));
-                String year = parent.getItemAtPosition(pos).toString();
-                Log.i("year", year);
-        		new DbConnection(SummaryActivity.this).execute(user_id, year);
+                mYear = parent.getItemAtPosition(pos).toString();
+                Log.i("year", mYear);
+        		new DbConnection(SummaryActivity.this).execute(user_id, mYear, mMeasure);
         	  }
+        });
+        
+        mMeasureSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener() {
+        	@Override
+        	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+        		mMeasure = parent.getItemAtPosition(pos).toString().toLowerCase();
+                Log.i("measure", mMeasure);
+        		drawChart();
+        	  }
+        });
+        
+        mMonthSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener() {
+        	@Override
+        	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+        		if (pos != 0) {
+        			mMeasureSpinner.setVisibility(View.INVISIBLE);
+	        		DefaultCategoryDataset dataSetN = new DefaultCategoryDataset();
+	                int countRow = 0;
+	                try {
+		                JSONObject job = mResult.getJSONObject(pos - 1);
+		                double totalSize = job.getDouble("size");
+		                if (job.getDouble("proteins") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("proteins")), "Food Group", "Proteins");
+		                    countRow++;
+		                }
+		                if (job.getDouble("carbohydrates") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("carbohydrates")), "Food Group", "Carbohydrates");
+		                    countRow++;
+		                }
+		                if (job.getDouble("sugar") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("sugar")), "Food Group", "Sugar");
+		                    countRow++;
+		                }
+		                if (job.getDouble("fat") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("fat")), "Food Group", "Fat");
+		                    countRow++;
+		                }
+		                if (job.getDouble("saturatedFat") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("saturatedFat")), "Food Group", "Saturated Fat");
+		                    countRow++;
+		                }
+		                if (job.getDouble("cholesterol") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("cholesterol")), "Food Group", "Cholesterol");
+		                    countRow++;
+		                }
+		                if (job.getDouble("fiber") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("fiber")), "Food Group", "Fiber");
+		                    countRow++;
+		                }
+		                if (job.getDouble("sodium") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("sodium")), "Food Group", "Sodium");
+		                    countRow++;
+		                }
+		                if (job.getDouble("vitaminA") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminA")), "Food Group", "Vitamin A");
+		                    countRow++;
+		                }
+		                if (job.getDouble("vitaminC") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminC")), "Food Group", "Vitamin C");
+		                    countRow++;
+		                }
+		                if (job.getDouble("calcium") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("calcium")), "Food Group", "Calcium");
+		                    countRow++;
+		                }
+		                if (job.getDouble("iron") > 0) {
+		                    dataSetN.setValue(percentage(totalSize, job.getDouble("iron")), "Food Group", "Iron");
+		                    countRow++;
+		                }
+	                } catch (JSONException e) {
+	                	e.printStackTrace();
+	                }
+	                
+	                BarChartView mView = new BarChartView(mContext);
+	                mView.drawChart(dataSetN, "Total Nutrition Percentage", "Nutritional Data", 0, true);
+	                
+	                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+	                        ViewGroup.LayoutParams.WRAP_CONTENT);
+	                p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
+	                mView.setLayoutParams(p);
+	                
+	                mRelativeLayout.addView(mView);
+        		}
+        		else {
+        			mMeasureSpinner.setVisibility(View.VISIBLE);
+        			drawChart();
+        		}
+        	 }
         });
         
 
@@ -78,7 +176,7 @@ public class SummaryActivity extends Activity {
         String user_id = Integer.toString(settings.getInt("user_id", -1));
         if (networkInfo != null && networkInfo.isConnected()) {
             if (!user_id.equals("-1")) {
-                new DbConnection(SummaryActivity.this).execute(user_id, "2014");
+                new DbConnection(SummaryActivity.this).execute(user_id, mYear, mMeasure);
             }
             else {
                 Toast.makeText(SummaryActivity.this, R.string.error, Toast.LENGTH_LONG).show();
@@ -87,6 +185,34 @@ public class SummaryActivity extends Activity {
         else {
             Toast.makeText(SummaryActivity.this, R.string.no_network, Toast.LENGTH_LONG).show();
         }
+	}
+	
+	private double percentage(double size, double nutri) {
+        if (size != 0) {
+            Log.i("result", roundTo2Decimals((nutri * 100.0) / size) + "");
+            return roundTo2Decimals((nutri * 100.0) / size);
+        } else {
+            Log.i("result", "0");
+            return 0;
+        }
+    }
+
+    private double roundTo2Decimals(double val) {
+        DecimalFormat df2 = new DecimalFormat("###.##");
+        return Double.valueOf(df2.format(val));
+    }
+	
+	public void drawChart() {
+
+        LineChartView mView = new LineChartView(mContext);
+        mView.drawChart(mResult, mMeasure, mYear);
+        
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
+        mView.setLayoutParams(p);
+        
+        mRelativeLayout.addView(mView);
 	}
 
     private class DbConnection extends AsyncTask<String, Void, JSONArray> {
@@ -102,7 +228,8 @@ public class SummaryActivity extends Activity {
         @Override
         protected JSONArray doInBackground(String... params) {
             year = "2014";
-            measure = "calories";
+            //measure = "calories";
+            measure = params[2];
             return sumNutritionGroupByMonth(params[0], params[1]);
         }
 
@@ -113,27 +240,9 @@ public class SummaryActivity extends Activity {
 
         @Override
         protected void onPostExecute(JSONArray result) {
-
-            List<Double> measures = new ArrayList<Double>();
-            try {
-                for (int i = 0; i < result.length(); i++) {
-                    measures.add(((JSONObject)result.get(i)).getDouble(measure));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Log.i("result", measures.toString());
-
-            LineChartView mView = new LineChartView(mContext);
-            mView.drawChart(result, measure, year);
-            
-            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
-            p.addRule(RelativeLayout.ABOVE, R.id.summary_by_month_button);
-            mView.setLayoutParams(p);
-            
-            mRelativeLayout.addView(mView);
+        	//mResult = new JSONArray();
+        	mResult = result;
+            drawChart();
         }
 
         public JSONArray sumNutritionGroupByMonth(String userid, String year) {
