@@ -47,6 +47,9 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	private Context mContext;
 	private String userId;
 	
+	private String mDateFrom;
+	private String mDateTill;
+	
 	public final static String EXTRA_MESSAGE = "com.example.bipapp.purchaseId";
 	
 	@Override
@@ -109,7 +112,15 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(BrowsePurchaseHistoryActivity.this, SummaryActivity.class);
+				Intent intent = new Intent(BrowsePurchaseHistoryActivity.this, FilterSummaryActivity.class);
+				if (mDateFrom == null || mDateTill == null) {
+					intent.putExtra("date_from", "");
+					intent.putExtra("date_till", "");
+				}
+				else {
+					intent.putExtra("date_from", mDateFrom);
+					intent.putExtra("date_till", mDateTill);
+				}
 				startActivity(intent);
 			}
 		});
@@ -175,6 +186,8 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 	}
 	
 	public void applyFilter(String user_id, String dateFrom, String dateTill) {
+		mDateFrom = dateFrom;
+		mDateTill = dateTill;
 		new DbConnection(BrowsePurchaseHistoryActivity.this).execute(user_id, dateFrom, dateTill);
 	}
 	
