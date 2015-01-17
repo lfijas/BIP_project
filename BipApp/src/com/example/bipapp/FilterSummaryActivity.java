@@ -48,10 +48,29 @@ public class FilterSummaryActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         Intent intent = getIntent();
-        //mDateFrom = intent.getExtras().getString("date_from");
-        //mDateTill = intent.getExtras().getString("date_till");
-        mDateFrom = "10/10/2014";
-        mDateTill = "21/11/2014";
+        mDateFrom = intent.getExtras().getString("date_from");
+        mDateTill = intent.getExtras().getString("date_till");
+        if (!mDateFrom.equals("") && !mDateTill.equals("")) {
+        	
+	        Log.i("FilterSummaryActivity", "FilterSummaryActivity - onCreate()");
+	        
+	        Log.i("dateFrom", mDateFrom);
+	        int firstDash = mDateFrom.indexOf('-');
+	        String yearFrom = mDateFrom.substring(0, mDateFrom.indexOf('-'));
+	        int secondDash = mDateFrom.indexOf('-', yearFrom.length() + 1);
+	        String monthFrom = mDateFrom.substring(firstDash + 1, secondDash);
+	        String dayFrom = mDateFrom.substring(secondDash + 1);
+	        
+	        Log.i("dateTill", mDateTill);
+	        firstDash = mDateTill.indexOf('-');
+	        String yearTill = mDateTill.substring(0, mDateTill.indexOf('-'));
+	        secondDash = mDateTill.indexOf('-', yearFrom.length() + 1);
+	        String monthTill = mDateTill.substring(firstDash + 1, secondDash);
+	        String dayTill = mDateTill.substring(secondDash + 1);
+	        
+	        mDateFrom = dayFrom + "/" + monthFrom + "/" + yearFrom;
+	        mDateTill = dayTill + "/" + monthTill + "/" + yearTill;
+        }
         Log.i("dateFrom", mDateFrom);
         Log.i("dateTill", mDateTill);
         
@@ -98,60 +117,61 @@ public class FilterSummaryActivity extends Activity {
 		DefaultCategoryDataset dataSetN = new DefaultCategoryDataset();
         int countRow = 0;
         try {
-            JSONObject job = mResult.getJSONObject(0);
-            double totalSize = job.getDouble("size");
-            if (job.getDouble("proteins") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("proteins")), "Food Group", "Proteins");
-                countRow++;
-            }
-            if (job.getDouble("carbohydrates") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("carbohydrates")), "Food Group", "Carbohydrates");
-                countRow++;
-            }
-            if (job.getDouble("sugar") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("sugar")), "Food Group", "Sugar");
-                countRow++;
-            }
-            if (job.getDouble("fat") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("fat")), "Food Group", "Fat");
-                countRow++;
-            }
-            if (job.getDouble("saturatedFat") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("saturatedFat")), "Food Group", "Saturated Fat");
-                countRow++;
-            }
-            if (job.getDouble("cholesterol") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("cholesterol")), "Food Group", "Cholesterol");
-                countRow++;
-            }
-            if (job.getDouble("fiber") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("fiber")), "Food Group", "Fiber");
-                countRow++;
-            }
-            if (job.getDouble("sodium") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("sodium")), "Food Group", "Sodium");
-                countRow++;
-            }
-            if (job.getDouble("vitaminA") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminA")), "Food Group", "Vitamin A");
-                countRow++;
-            }
-            if (job.getDouble("vitaminC") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminC")), "Food Group", "Vitamin C");
-                countRow++;
-            }
-            if (job.getDouble("calcium") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("calcium")), "Food Group", "Calcium");
-                countRow++;
-            }
-            if (job.getDouble("iron") > 0) {
-                dataSetN.setValue(percentage(totalSize, job.getDouble("iron")), "Food Group", "Iron");
-                countRow++;
-            }
+        	if (mResult != null) {
+	            JSONObject job = mResult.getJSONObject(0);
+	            double totalSize = job.getDouble("size");
+	            if (job.getDouble("proteins") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("proteins")), "Food Group", "Proteins");
+	                countRow++;
+	            }
+	            if (job.getDouble("carbohydrates") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("carbohydrates")), "Food Group", "Carbohydrates");
+	                countRow++;
+	            }
+	            if (job.getDouble("sugar") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("sugar")), "Food Group", "Sugar");
+	                countRow++;
+	            }
+	            if (job.getDouble("fat") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("fat")), "Food Group", "Fat");
+	                countRow++;
+	            }
+	            if (job.getDouble("saturatedFat") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("saturatedFat")), "Food Group", "Saturated Fat");
+	                countRow++;
+	            }
+	            if (job.getDouble("cholesterol") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("cholesterol")), "Food Group", "Cholesterol");
+	                countRow++;
+	            }
+	            if (job.getDouble("fiber") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("fiber")), "Food Group", "Fiber");
+	                countRow++;
+	            }
+	            if (job.getDouble("sodium") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("sodium")), "Food Group", "Sodium");
+	                countRow++;
+	            }
+	            if (job.getDouble("vitaminA") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminA")), "Food Group", "Vitamin A");
+	                countRow++;
+	            }
+	            if (job.getDouble("vitaminC") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("vitaminC")), "Food Group", "Vitamin C");
+	                countRow++;
+	            }
+	            if (job.getDouble("calcium") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("calcium")), "Food Group", "Calcium");
+	                countRow++;
+	            }
+	            if (job.getDouble("iron") > 0) {
+	                dataSetN.setValue(percentage(totalSize, job.getDouble("iron")), "Food Group", "Iron");
+	                countRow++;
+	            }
+        	}
         } catch (JSONException e) {
         	e.printStackTrace();
         }
-        
         BarChartView mView = new BarChartView(mContext);
         mView.drawChart(dataSetN, "Total Nutrition Percentage", "Nutritional Data", 0, true);
         
