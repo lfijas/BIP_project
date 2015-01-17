@@ -2,6 +2,11 @@ package com.example.bipapp;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +78,29 @@ public class SummaryActivity extends Activity {
 		});*/
         
         loadCategoriesToSpinner();
+        
+        mCategorySpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener() {
+        	@Override
+        	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+        		mMeasureSpinner.setVisibility(View.VISIBLE);
+        		mMonthSpinner.setSelection(0);
+        		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String user_id = Integer.toString(settings.getInt("user_id", -1));
+                String cat = parent.getItemAtPosition(pos).toString();
+                if (cat.equals("All categories")) {
+                	new DbConnection(SummaryActivity.this).execute(user_id, mYear, mMeasure);
+                }
+                else {
+	                String isCustomCat = "true";
+	                if (cat.equals("Fruit") || cat.equals("Vegetable") || cat.equals("Meat") || cat.equals("Grains, beans, and legumes")
+	                		|| cat.equals("Dairy") || cat.equals("Confections") || cat.equals("Water") || cat.equals("Miscellaneous")) {
+	                	isCustomCat = "false";
+	                }
+	                Log.i("year", mYear);
+	        		new DbConnection(SummaryActivity.this).execute(user_id, mYear, mMeasure, cat, isCustomCat);
+                }
+        	}
+        });
         
         mYearSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(){
         	
@@ -225,8 +253,8 @@ public class SummaryActivity extends Activity {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 		int customCategoryListSize = sp.getInt("numberOfCustomCat", 0);
 		
-		
 		List<String> categories = new ArrayList<String>();
+		categories.add("All categories");
 		
 		for (int i = 0; i < customCategoryListSize; i++) {
 			String cat = sp.getString("customCat_" + i, "");
@@ -234,6 +262,12 @@ public class SummaryActivity extends Activity {
 		}
 		categories.add("Fruit");
 		categories.add("Vegetable");
+		categories.add("Meat");
+		categories.add("Grains, beans, and legumes");
+		categories.add("Dairy");
+		categories.add("Confections");
+		categories.add("Water");
+		categories.add("Miscellaneous");
 		ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, categories);
 		categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCategorySpinner.setAdapter(categoriesAdapter);
@@ -244,6 +278,8 @@ public class SummaryActivity extends Activity {
         private Context mContext;
         private String year;
         private String measure;
+        private String category;
+        private String isCustomCategory;
 
         public DbConnection(Context context) {
             mContext = context;
@@ -254,6 +290,10 @@ public class SummaryActivity extends Activity {
             year = "2014";
             //measure = "calories";
             measure = params[2];
+            if (params.length == 5) {
+            	category = params[3];
+            	isCustomCategory = params[4];
+            }
             return sumNutritionGroupByMonth(params[0], params[1]);
         }
 
@@ -268,13 +308,63 @@ public class SummaryActivity extends Activity {
         	mResult = result;
             drawChart();
         }
+        
+        private String getCategoryIdByName(String name, String isCustom) {
+        	
+        	Connection conn = null;
+            ArrayList<Product> resultArrayList = null;
+            String categoryId = null;
+
+            try {
+                Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
+                String username = "Admin";
+                String password = "BIP_project";
+                conn = DriverManager.getConnection("jdbc:jtds:sqlserver://" + Utils.serverIp + ":1433/BIP_project;user=" + username + ";password=" + password);
+
+                Log.w("Connection","open");
+                Statement statement = conn.createStatement();
+                ResultSet resultSet;
+                if(isCustom.equals("true")) {
+                	resultSet = statement.executeQuery("SELECT TOP 1 [custom_cat_id] as [id]" +
+                			  " FROM [CustomCategory]" +
+                					  " where custom_category_name = '" + name + "'");
+                }
+                else {
+                	resultSet = statement.executeQuery("SELECT TOP 1 [id] FROM [Food_groups]" +
+                					"where [group_name] = '" + name + "'");
+                }
+
+                try {
+                    if (resultSet != null && resultSet.next()) {
+                        categoryId = resultSet.getString("id");
+                    }
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                conn.close();
+
+            } catch (Exception e) {
+                Log.w("Error connection","" + e.getMessage());
+                e.printStackTrace();
+            }
+            return categoryId;
+        }
+    
 
         public JSONArray sumNutritionGroupByMonth(String userid, String year) {
             JSONArray jarray = null;
             try {
                 HttpClient client = new DefaultHttpClient();
-
-                String getURL = "http://54.149.71.241/Nutrition/sumNutritionGroupByMonth?userID=" + userid + "&year=" + year;
+                String getURL;
+                if (category != null && isCustomCategory != null) {
+                	getURL = "http://54.149.71.241/Nutrition/sumNutritionGroupByMonth?userID=" + userid + "&year=" + year 
+                			+ "&categoryID=" + getCategoryIdByName(category, isCustomCategory) + "&isCustom=" + isCustomCategory;
+                }
+                else {
+                	getURL = "http://54.149.71.241/Nutrition/sumNutritionGroupByMonth?userID=" + userid + "&year=" + year;
+                }
                 HttpGet get = new HttpGet(getURL);
                 get.setHeader("Accept", "application/json");
                 HttpResponse responseGet = client.execute(get);
