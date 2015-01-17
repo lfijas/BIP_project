@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -39,6 +40,7 @@ public class SummaryActivity extends Activity {
 	private Spinner mYearSpinner;
 	private Spinner mMonthSpinner;
 	private Spinner mMeasureSpinner;
+	private Spinner mCategorySpinner;
 	private String mYear;
 	private String mMeasure;
 	private JSONArray mResult;
@@ -59,6 +61,7 @@ public class SummaryActivity extends Activity {
         mYearSpinner.setSelection(1);
         mMonthSpinner = (Spinner) findViewById(R.id.months_spinner);
         mMeasureSpinner = (Spinner) findViewById(R.id.measure_spinner);
+        mCategorySpinner = (Spinner) findViewById(R.id.category_spinner);
         /*mMonthSummaryButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -68,6 +71,8 @@ public class SummaryActivity extends Activity {
 				
 			}
 		});*/
+        
+        loadCategoriesToSpinner();
         
         mYearSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(){
         	
@@ -157,7 +162,7 @@ public class SummaryActivity extends Activity {
 	                
 	                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
 	                        ViewGroup.LayoutParams.WRAP_CONTENT);
-	                p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
+	                p.addRule(RelativeLayout.BELOW, R.id.spinner_layout2);
 	                mView.setLayoutParams(p);
 	                
 	                mRelativeLayout.addView(mView);
@@ -209,10 +214,29 @@ public class SummaryActivity extends Activity {
         
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        p.addRule(RelativeLayout.BELOW, R.id.spinner_layout);
+        p.addRule(RelativeLayout.BELOW, R.id.spinner_layout2);
         mView.setLayoutParams(p);
         
         mRelativeLayout.addView(mView);
+	}
+	
+	private void loadCategoriesToSpinner() {
+		
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+		int customCategoryListSize = sp.getInt("numberOfCustomCat", 0);
+		
+		
+		List<String> categories = new ArrayList<String>();
+		
+		for (int i = 0; i < customCategoryListSize; i++) {
+			String cat = sp.getString("customCat_" + i, "");
+			categories.add(cat);
+		}
+		categories.add("Fruit");
+		categories.add("Vegetable");
+		ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, categories);
+		categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mCategorySpinner.setAdapter(categoriesAdapter);
 	}
 
     private class DbConnection extends AsyncTask<String, Void, JSONArray> {

@@ -5,33 +5,47 @@
     android:layout_height="match_parent" >
     
     <LinearLayout
-        android:id="@+id/spinner_layout"
+        android:id="@+id/spinner_layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal" >
-    
-        <Spinner
-	        android:id="@+id/years_spinner"
-	        android:layout_width="wrap_content"
+        
+	    <LinearLayout
+	        android:id="@+id/spinner_layout"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:entries="@array/years"
-	        android:prompt="@string/year_prompt"
-	        android:layout_gravity="left" />
- 
-	    <Spinner
-	        android:id="@+id/months_spinner"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" 
-	        android:entries="@array/months"
-	        android:layout_gravity="right" />
+	        android:orientation="horizontal"
+	        android:gravity="center_horizontal" >
 	    
-	    <Spinner
-	        android:id="@+id/measure_spinner"
+	        <Spinner
+		        android:id="@+id/years_spinner"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:entries="@array/years"
+		        android:prompt="@string/year_prompt"
+		        android:layout_gravity="left" />
+	 
+		    <Spinner
+		        android:id="@+id/months_spinner"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:entries="@array/months"
+		        android:layout_gravity="right" />
+		    
+		    <Spinner
+		        android:id="@+id/measure_spinner"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:entries="@array/measures" />
+	    
+	    </LinearLayout>
+	    	
+    	<Spinner
+	        android:id="@+id/category_spinner"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" 
-	        android:entries="@array/measures" />
-    
+	        android:layout_height="wrap_content" />
+    	
     </LinearLayout>
 </RelativeLayout>
