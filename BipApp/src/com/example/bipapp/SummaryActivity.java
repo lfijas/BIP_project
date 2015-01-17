@@ -118,6 +118,15 @@ public class SummaryActivity extends Activity {
         	@Override
         	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
         		mMeasure = parent.getItemAtPosition(pos).toString().toLowerCase();
+        		if (mMeasure.equals("saturated fat")) {
+        			mMeasure = "saturatedFat";
+        		}
+        		else if (mMeasure.equals("vit. a")) {
+        			mMeasure = "vitaminA";
+        		}
+        		else if (mMeasure.equals("vit. c")) {
+        			mMeasure = "vitaminC";
+        		}
                 Log.i("measure", mMeasure);
         		drawChart();
         	  }
