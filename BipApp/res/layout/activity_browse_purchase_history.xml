@@ -35,6 +35,6 @@
         android:id="@+id/view_purchase_history_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:text="@string/view_summary" />
+        android:text="View purchase summary" />
    
 </LinearLayout>

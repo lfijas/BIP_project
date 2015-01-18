@@ -24,7 +24,7 @@
     <string name="iron_label">Iron: </string>
     <string name="vitamin_a_label">Vitamin A: </string>
     <string name="vitamin_c_label">Vitamin C: </string>
-    <string name="title_product_catalog">Product catalog</string>
+    <string name="title_product_catalog">Product Catalog</string>
     <string name="browse_product_catalog">Browse product catalog</string>
     <string name="browse_purchase_history">Browse purchase history</string>
     <string name="title_activity_login">Login</string>
@@ -41,17 +41,17 @@
     <string name="previous_purchases">Previous purchases</string>
     <string name="error">An error occurred! Try to log in again</string>
     <string name="title_activity_purchase_summary">Purchase Summary</string>
-    <string name="title_activity_custom_category">CustomCategoryActivity</string>
+    <string name="title_activity_custom_category">Custom Category</string>
     <string name="view_summary">View Summary</string>
-    <string name="title_activity_summary">SummaryActivity</string>
+    <string name="title_activity_summary">Monthly Summary</string>
     <string name="filter">Filter</string>
-    <string name="title_activity_add_category">AddCategoryActivity</string>
+    <string name="title_activity_add_category">Purchase Summary</string>
     <string name="add_custom_category">Add custom category</string>
     <string name="add_category_hint">Name of your custom category</string>
     <string name="add">Add</string>
     <string name="empty_category">New category cannot be empty</string>
     <string name="category_add">New category has been added</string>
     <string name="year_prompt">Choose a year</string>
-    <string name="title_activity_filter_summary">FilterSummaryActivity</string>
+    <string name="title_activity_filter_summary">Purchase Summary</string>
 
 </resources>
