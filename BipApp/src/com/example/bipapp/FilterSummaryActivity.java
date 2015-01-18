@@ -177,7 +177,7 @@ public class FilterSummaryActivity extends Activity {
         
         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        p.addRule(RelativeLayout.BELOW, R.id.filter_summary_text);
+        //p.addRule(RelativeLayout.BELOW, R.id.filter_summary_text);
         mView.setLayoutParams(p);
         
         mRelativeLayout.addView(mView);

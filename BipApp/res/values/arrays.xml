@@ -3,7 +3,7 @@
 	<string-array name="fliters">
 	     <item>Filters</item>
 	    <item>Date range</item>
-	    <item>Price</item>
+	    <!--  item>Price</item-->
 	    <item>Clear filters</item>
 	</string-array>
 	

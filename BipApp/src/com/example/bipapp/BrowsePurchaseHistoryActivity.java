@@ -89,12 +89,12 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 						dateDialog.show(((Activity) mContext).getFragmentManager(), "date_range_dialog");
 						((Activity) mContext).getActionBar().setSelectedNavigationItem(0);
 						break;
-					case 2:
+					/*case 2:
 						PriceRangeDialogFragment priceDialog = new PriceRangeDialogFragment();
 						priceDialog.show(((Activity) mContext).getFragmentManager(), "price_range_dialog");
 						((Activity) mContext).getActionBar().setSelectedNavigationItem(0);
-						break;
-					case 3:
+						break;*/
+					case 2:
 						applyFilter(getUserId(), null, null);
 						((Activity) mContext).getActionBar().setSelectedNavigationItem(0);
 						break;

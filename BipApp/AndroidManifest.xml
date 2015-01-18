@@ -19,15 +19,18 @@
         <activity
             android:name="com.example.bipapp.MainActivity"
             android:label="@string/title_product_catalog"
-            android:parentActivityName="com.example.bipapp.MenuActivity" >
+            android:parentActivityName="com.example.bipapp.MenuActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.NutritionInfoActivity"
-            android:label="@string/title_activity_nutrition_info" >
+            android:label="@string/title_activity_nutrition_info"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.MenuActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,36 +40,44 @@
         <activity
             android:name="com.example.bipapp.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="com.example.bip.MenuActivity" >
+            android:parentActivityName="com.example.bip.MenuActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.BrowsePurchaseHistoryActivity"
             android:label="@string/title_activity_browse_purchase_history"
-            android:parentActivityName="com.example.bip.MenuActivity" >
+            android:parentActivityName="com.example.bip.MenuActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.PurchaseSummaryActivity"
-            android:label="@string/title_activity_purchase_summary" >
+            android:label="@string/title_activity_purchase_summary"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.CustomCategoryActivity"
-            android:label="@string/title_activity_custom_category" >
+            android:label="@string/title_activity_custom_category"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.SummaryActivity"
-            android:label="@string/title_activity_summary" >
+            android:label="@string/title_activity_summary"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.AddCategoryActivity"
-            android:label="@string/title_activity_add_category" >
+            android:label="@string/title_activity_add_category"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.NutritionSummaryActivity"
-            android:label="@string/title_activity_add_category" >
+            android:label="@string/title_activity_add_category"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.bipapp.FilterSummaryActivity"
-            android:label="@string/title_activity_filter_summary" >
+            android:label="@string/title_activity_filter_summary"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
