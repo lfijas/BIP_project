@@ -246,7 +246,7 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		        if (dateFrom == null) {
 		        	resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
 			        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
-			        		" WHERE [user_id] = " + user_id);
+			        		" WHERE [user_id] = " + user_id + " order by date_time desc");
 		        }
 		        else {
 		        	Log.i("user_id", user_id);
@@ -254,7 +254,8 @@ public class BrowsePurchaseHistoryActivity extends Activity {
 		        	Log.i("dateTill", dateTill);
 		        	resultSet = statement.executeQuery("SELECT purchase_id, date_time, name FROM PurchaseHistory " +
 			        		"JOIN Branch on PurchaseHistory.branch_id = Branch.branch_id" +
-			        		" WHERE [user_id] = " + user_id + " and date_time >= '" + dateFrom + "' and date_time <= '" + dateTill + "'");
+			        		" WHERE [user_id] = " + user_id + " and date_time >= '" + dateFrom + "' and date_time <= '" + dateTill + "' " +
+			        				"order by date_time desc");
 		        }
 
 		        resultArrayList = new ArrayList<Purchase>();

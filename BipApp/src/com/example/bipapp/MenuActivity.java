@@ -83,6 +83,7 @@ public class MenuActivity extends Activity {
 				logoutButton.setVisibility(View.GONE);
 				greetingText.setVisibility(View.GONE);
 				addCustomCategoryButton.setVisibility(View.GONE);
+				summaryButton.setVisibility(View.GONE);
 				Toast.makeText(MenuActivity.this, R.string.logout_info, Toast.LENGTH_LONG).show();
 			}
 		});
@@ -105,6 +106,7 @@ public class MenuActivity extends Activity {
 		if (!username.equals("")) {
 			logoutButton.setVisibility(View.VISIBLE);
 			addCustomCategoryButton.setVisibility(View.VISIBLE);
+			summaryButton.setVisibility(View.VISIBLE);
 			greetingText.setText("Hi, " + username);
 			greetingText.setVisibility(View.VISIBLE);
 		}
